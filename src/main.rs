@@ -6,7 +6,7 @@ use std::fs::File;
 use std::net::TcpStream;
 use std::io::prelude::*;
 use std::io::BufReader;
-
+use std::fs::OpenOptions;
 use rayon::prelude::*;
 
 static CLUSTER: &str = "cluster.dl9gtb.de:8000";
@@ -16,10 +16,13 @@ lazy_static! {
     static ref CALLS: Vec<String> = open_callsignlist(); 
 }
 
+
 fn main() {
-    println!("   RUST DX Tracker: ");
-    println!("      By DD5HT");
-    println!("=======================");
+    println!("==========================================================================================================");
+    println!("                                       RUST DX Tracker: ");
+    println!("                                          By DD5HT");
+    println!("==========================================================================================================");
+    insert_call("DM5EE");
     cluster();
 }
 
@@ -42,11 +45,12 @@ fn get_callsign<T: AsRef<str>>(entry: &[T]) {
     //let sample: Vec<&str> = vec!["DD5HT","EI9KF","DL3LAR","HA3FTV","HA0NAR","SM0RRX","RA6QM","RU3X"];
     let sample = CALLS.clone();
     if entry.len() > 3 {
-        let spotter = entry[0].as_ref();
+        let spotter = entry[0].as_ref().trim_right_matches("-#:");
         let call = entry[2].as_ref();
         let freq = entry[1].as_ref();
+        let mode = entry[3].as_ref();
         match sample.into_par_iter().find_any(|x| x == call) {
-        Some(c) => println!("Spotted {} on {} by {}",c, freq, spotter),
+        Some(c) => println!("Spotted {} on {} by {} in {}",c, freq, spotter, mode),
         None => () ,
         }
     }
@@ -62,10 +66,8 @@ fn cluster() {
     loop {
         let mut output = String::new();
         reader.read_line(&mut output).unwrap();
-        //println!("{:?}",filter_entry(output));
-        //let x = output.clone();
-           get_callsign(&filter_entry(output));
-           //println!("", );
+        get_callsign(&filter_entry(output));
+
     }
 }
 
@@ -74,10 +76,29 @@ fn open_callsignlist() -> Vec<String> {
     let mut calls: Vec<String> = Vec::new(); 
     for line in file.lines() {
         match line {
-            Ok(l) => calls.push(l),
+            Ok(l) =>  if !l.is_empty() {calls.push(l)},
             Err(e) => println!("Ups: {}",e ),
-        }{}
+        }
     }
-    println!("Loaded following calls: {:?}", calls );
+    println!("Loaded the following calls: {:?}", calls );
     calls
+}
+
+fn insert_call(call: &str) { //ADD Result as return mabye?
+    //let mut new_call = String::from("DD5HT");
+    let mut new_call = String::from(call);
+    let list = open_callsignlist();
+    if list.contains(&new_call) {
+        println!("{} is already in callsign list!", new_call );
+    }
+    else {
+        println!("Inserting: {}", new_call );
+        new_call.push_str("\n");
+        let mut file = OpenOptions::new()
+        .append(true)
+        .open("calls.csv")
+        .unwrap();
+        file.write_all(new_call.as_bytes()).expect("Cant write to file");
+    }
+
 }
