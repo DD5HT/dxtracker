@@ -4,3 +4,9 @@ version = "0.1.0"
 authors = ["hendrik"]
 
 [dependencies]
+rayon ="*"
+lazy_static = "1.0"
+
+[profile.release]
+lto = true
+
