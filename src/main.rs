@@ -1,4 +1,3 @@
-extern crate rayon;
 #[macro_use]
 extern crate lazy_static;
 
@@ -7,7 +6,6 @@ use std::net::TcpStream;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::OpenOptions;
-use rayon::prelude::*;
 
 static CLUSTER: &str = "cluster.dl9gtb.de:8000";
 static CALL: [u8; 6] = *b"dd5ht\n";
@@ -49,7 +47,7 @@ fn get_callsign<T: AsRef<str>>(entry: &[T]) {
         let call = entry[2].as_ref();
         let freq = entry[1].as_ref();
         let mode = entry[3].as_ref();
-        match sample.into_par_iter().find_any(|x| x == call) {
+        match sample.into_iter().find(|x| x == call) {
         Some(c) => println!("Spotted {} on {} by {} in {}",c, freq, spotter, mode),
         None => () ,
         }
