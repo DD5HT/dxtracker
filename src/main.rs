@@ -20,7 +20,9 @@ fn main() {
     println!("                                       RUST DX Tracker: ");
     println!("                                          By DD5HT");
     println!("==========================================================================================================");
-    insert_call("DM5EE");
+    insert_call("DL3LAR");
+    insert_call("DP4B");
+    insert_call("DD5HT");
     cluster();
 }
 
@@ -62,9 +64,9 @@ fn cluster() {
 
     let mut reader = BufReader::new(stream);
     loop {
-        let mut output = String::new();
-        reader.read_line(&mut output).unwrap();
-        get_callsign(&filter_entry(output));
+        let mut buffer = String::new(); // Create a new Buffer
+        reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
+        get_callsign(&filter_entry(buffer));  //Put the Buffer into filter function
 
     }
 }
@@ -98,5 +100,8 @@ fn insert_call(call: &str) { //ADD Result as return mabye?
         .unwrap();
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
     }
+}
 
+fn remove_call(call: &str) {
+    unimplemented!();
 }
