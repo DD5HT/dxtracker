@@ -105,3 +105,19 @@ fn insert_call(call: &str) { //ADD Result as return mabye?
 fn remove_call(call: &str) {
     unimplemented!();
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn filter_entry_test() {
+        let sample0 = String::from("DX de EA5WU-#:    3508.0  IK3VUU       CW 19 dB 20 WPM CQ             2149Z");
+        let expected0: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
+        assert_eq!(filter_entry(sample0),expected0);
+
+        let sample1 = String::from("DX de K8WHA:     14081.0  TG9AHM       CQ DX RTTY Correction Freq     2150Z");
+        let expected1: Vec<&str> = vec!["K8WHA:", "14081.0", "TG9AHM", "CQ", "RTTY", "Correction", "Freq", "2150Z"];
+        assert_eq!(filter_entry(sample1),expected1);
+    }
+}
