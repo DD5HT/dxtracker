@@ -122,9 +122,5 @@ mod tests {
         let sample1 = String::from("DX de K8WHA:     14081.0  TG9AHM       CQ DX RTTY Correction Freq     2150Z");
         let expected1: Vec<&str> = vec!["K8WHA:", "14081.0", "TG9AHM", "CQ", "RTTY", "Correction", "Freq", "2150Z"];
         assert_eq!(filter_entry(sample1),expected1);
-
-        let sample2 = String::from(" a b c d e f g h i j k l m n o p q r s t u v w x y z");
-        let expected2: Vec<&str> = vec!["K8WHA:", "14081.0", "TG9AHM", "CQ", "RTTY", "Correction", "Freq", "2150Z"];
-        assert_eq!(filter_entry(sample2),expected2);
     }
 }
