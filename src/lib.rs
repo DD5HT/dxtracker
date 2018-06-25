@@ -15,7 +15,7 @@ lazy_static! {
 }
 
 
-fn main() {
+/**fn main() {
     println!("==========================================================================================================");
     println!("                                       RUST DX Tracker: ");
     println!("                                          By DD5HT");
@@ -25,7 +25,7 @@ fn main() {
     insert_call("DP4B");
     insert_call("DD5HT");
     cluster();
-}
+}*/
 //TODO
 //Add function to clean obvious malformated entries
 
@@ -59,7 +59,7 @@ fn get_callsign<T: AsRef<str>>(entry: &[T]) {
     }
 }
 
-fn cluster() {
+pub fn cluster() {
     //Connect to dx-cluster server
     let mut stream = TcpStream::connect(CLUSTER).unwrap();
     //Write callsign to telnet server to start getting cluster messages.
@@ -87,12 +87,13 @@ fn open_callsignlist() -> Vec<String> {
     calls
 }
 
-fn insert_call(call: &str) { //ADD Result as return mabye?
+pub fn insert_call(call: &str) ->Option<&str>{ //ADD Result as return mabye?
     //let mut new_call = String::from("DD5HT");
     let mut new_call = String::from(call);
     let list = open_callsignlist();
     if list.contains(&new_call) {
         println!("{} is already in callsign list!", new_call );
+        return None;
     }
     else {
         println!("Inserting: {}", new_call );
@@ -102,6 +103,7 @@ fn insert_call(call: &str) { //ADD Result as return mabye?
         .open("calls.csv")
         .unwrap();
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
+        return Some(call);
     }
 }
 
