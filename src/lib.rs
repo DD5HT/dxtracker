@@ -86,9 +86,12 @@ fn open_callsignlist() -> Vec<String> {
     println!("Loaded the following calls: {:?}", calls );
     calls
 }
-
-pub fn insert_call(call: &str) ->Option<&str>{ //ADD Result as return mabye?
-    //let mut new_call = String::from("DD5HT");
+///Inserts a call into the Callsign csv list
+/// ´´´
+/// let call = "TESTCALL";
+/// assert_eq!(insert_call(call),Some(call));
+/// ´´´
+pub fn insert_call(call: &str) -> Option<&str> {
     let mut new_call = String::from(call);
     let list = open_callsignlist();
     if list.contains(&new_call) {
