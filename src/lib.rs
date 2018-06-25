@@ -95,6 +95,9 @@ fn open_callsignlist() -> Vec<String> {
 /// assert_eq!(insert_call(call),Some(call));
 /// ´´´
 pub fn insert_call(call: &str) -> Option<&str> {
+    //TODO Filter callsign if it's to short or to long
+    //2 < Callsign < 20
+    //TODO Better error handling switch to result?
     let mut new_call = String::from(call);
     let list = open_callsignlist();
     if list.contains(&new_call) {
