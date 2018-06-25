@@ -1,7 +1,7 @@
 [package]
 name = "dxtracker"
 version = "0.1.0"
-authors = ["hendrik"]
+authors = ["hendrik@dd5ht.de"]
 
 [dependencies]
 lazy_static = "1.0"
