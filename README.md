@@ -10,3 +10,7 @@ A simple Rust Telnet Client, which connects to an DX Cluster Server. It also add
 + Better handling of CSV file
 + search calls function
 + work extern api for interfacing with oder programms
+
+## Disclaimer
+I also use this project to experiment with git/ github TDD and Travis CI so chances are that it breaks a stable
+release is planned for the future.
