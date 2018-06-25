@@ -43,7 +43,7 @@ fn filter_entry(entry: String) -> Vec<String> {
          .for_each(|x| output.push(String::from(x)));
     output
 }
-
+//TODO write TEST for function
 fn get_callsign<T: AsRef<str>>(entry: &[T]) {
     //let sample: Vec<&str> = vec!["DD5HT","EI9KF","DL3LAR","HA3FTV","HA0NAR","SM0RRX","RA6QM","RU3X"];
     let sample = CALLS.clone();
@@ -58,8 +58,11 @@ fn get_callsign<T: AsRef<str>>(entry: &[T]) {
         }
     }
 }
-
-pub fn cluster() {
+/// Starts the DX Cluster and connects to it via the given CALL
+/// It repeatedly clals the get_callsign function with the filtered buffer
+/// entries
+/// TODO add non static variables 
+pub fn connect_to_cluster() {
     //Connect to dx-cluster server
     let mut stream = TcpStream::connect(CLUSTER).unwrap();
     //Write callsign to telnet server to start getting cluster messages.
