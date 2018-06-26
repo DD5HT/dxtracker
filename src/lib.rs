@@ -7,9 +7,6 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::OpenOptions;
 
-static CLUSTER: &str = "cluster.dl9gtb.de:8000";
-static CALL: [u8; 6] = *b"dd5ht\n";
-
 lazy_static! {
     static ref CALLS: Vec<String> = open_callsignlist(); 
 }
@@ -58,23 +55,24 @@ fn get_callsign<T: AsRef<str>>(entry: &[T]) {
         }
     }
 }
-/// Starts the DX Cluster and connects to it via the given CALL
+/// Starts the DX Cluster and connects to it via the given cluster address and call
 /// It repeatedly clals the get_callsign function with the filtered buffer
 /// entries
-/// TODO add non static variables 
-pub fn connect_to_cluster() {
+pub fn connect_to_cluster(cluster: &str, call: &str) -> Result<String, String> {
     //Connect to dx-cluster server
-    let mut stream = TcpStream::connect(CLUSTER).unwrap();
+    let mut stream = TcpStream::connect(cluster).unwrap();
     //Write callsign to telnet server to start getting cluster messages.
-    let _ = stream.write(&CALL);
+    let _ = stream.write(&call.as_bytes());
 
     let mut reader = BufReader::new(stream);
-    loop {
+    //Write no function for cluster
+    //Add multithreading
+    for _ in 0..10 {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
         get_callsign(&filter_entry(buffer));  //Put the Buffer into filter function
-
     }
+    Ok(String::from("Worked"))
 }
 
 fn open_callsignlist() -> Vec<String> {
