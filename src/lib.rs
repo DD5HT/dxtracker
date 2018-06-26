@@ -41,15 +41,16 @@ fn filter_entry(entry: String) -> Vec<String> {
     output
 }
 //TODO write TEST for function
-fn get_callsign<T: AsRef<str>>(entry: &[T]) {
-    //let sample: Vec<&str> = vec!["DD5HT","EI9KF","DL3LAR","HA3FTV","HA0NAR","SM0RRX","RA6QM","RU3X"];
-    let sample = CALLS.clone();
+//TODO add return type
+///Takes formated entries and filters them: entry and checks if callsign from
+///searchlist is in entry
+fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<&str>) {
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
         let call = entry[2].as_ref();
         let freq = entry[1].as_ref();
         let mode = entry[3].as_ref();
-        match sample.into_iter().find(|x| x == call) {
+        match searchlist.into_iter().find(|&x| x == call) {
         Some(c) => println!("Spotted {} on {} by {} in {}",c, freq, spotter, mode),
         None => () ,
         }
