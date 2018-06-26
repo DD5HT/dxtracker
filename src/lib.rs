@@ -71,7 +71,9 @@ pub fn connect_to_cluster(cluster: &str, call: &str) -> Result<String, String> {
     for _ in 0..10 {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
-        get_callsign(&filter_entry(buffer));  //Put the Buffer into filter function
+        //TODO add propper callsignlist instead of vec!["DD5HT"]
+        let callsignlist = vec!["DD5HT"];
+        get_callsign(&filter_entry(buffer),callsignlist);  //Put the Buffer into filter function
     }
     Ok(String::from("Worked"))
 }
