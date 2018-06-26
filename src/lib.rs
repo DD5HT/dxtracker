@@ -7,6 +7,7 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::OpenOptions;
 
+//remove static
 lazy_static! {
     static ref CALLS: Vec<String> = open_callsignlist(); 
 }
@@ -44,13 +45,13 @@ fn filter_entry(entry: String) -> Vec<String> {
 //TODO add return type
 ///Takes formated entries and filters them: entry and checks if callsign from
 ///searchlist is in entry
-fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<&str>) {
+fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) {
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
         let call = entry[2].as_ref();
         let freq = entry[1].as_ref();
         let mode = entry[3].as_ref();
-        match searchlist.into_iter().find(|&x| x == call) {
+        match searchlist.into_iter().find(|x| x == call) {
         Some(c) => println!("Spotted {} on {} by {} in {}",c, freq, spotter, mode),
         None => () ,
         }
@@ -72,8 +73,7 @@ pub fn connect_to_cluster(cluster: &str, call: &str) -> Result<String, String> {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
         //TODO add propper callsignlist instead of vec!["DD5HT"]
-        let callsignlist = vec!["DD5HT"];
-        get_callsign(&filter_entry(buffer),callsignlist);  //Put the Buffer into filter function
+        get_callsign(&filter_entry(buffer),CALLS.to_vec());  //Put the Buffer into filter function
     }
     Ok(String::from("Worked"))
 }
