@@ -27,7 +27,7 @@ lazy_static! {
 //TODO
 //Add function to clean obvious malformated entries
 
-///Filters the cluster entries and returns a clean vector of strings
+///Filters the cluster entries and returns a cleaned up vector of strings
 fn filter_entry(entry: String) -> Vec<String> {
     let mut output: Vec<String> = Vec::with_capacity(16); //Malfromated entries can lead to new memory allocation
     entry.trim_right_matches("\r\n")
@@ -93,31 +93,34 @@ fn open_callsignlist() -> Vec<String> {
 ///Inserts a call into the Callsign csv list
 /// ´´´
 /// let call = "TESTCALL";
-/// assert_eq!(insert_call(call),Some(call));
+/// assert_eq!(insert_call(call),Ok(call));
 /// ´´´
-pub fn insert_call(call: &str) -> Option<&str> {
-    //TODO Filter callsign if it's to short or to long
-    //2 < Callsign < 20
-    //TODO Better error handling switch to result?
+pub fn insert_call(call: &str) -> Result<&str, String> {
+    if call.len() < 3 || call.len() > 20 {
+        return Err(String::from("Invalid call format!"));
+    }
+    //TODO add ascii filtering
     let mut new_call = String::from(call);
     let list = open_callsignlist();
     if list.contains(&new_call) {
         println!("{} is already in callsign list!", new_call );
-        return None;
+        return Err(format!("{} is alread in callsign list!", new_call));
     }
     else {
         println!("Inserting: {}", new_call );
         new_call.push_str("\n");
         let mut file = OpenOptions::new()
-        .append(true)
-        .open("calls.csv")
-        .unwrap();
+            .append(true)
+            .open("calls.csv")
+            .unwrap(); // Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
-        return Some(call);
+        return Ok(call);
     }
 }
 //FIXME
-fn remove_call(call: &str) {
+fn remove_call(call: &str) -> Result<&str, &str> {
+    let mut file = OpenOptions::new();
+        
     unimplemented!();
 }
 //TODO Remove TESTS?
