@@ -12,19 +12,24 @@ lazy_static! {
     static ref CALLS: Vec<String> = open_callsignlist(); 
 }
 
+//TODO:
+// use serde for serializing data
+// At start of programm desizerlize all data
+// serlize all data after each read and write
+// solves 
 
 /**fn main() {
-    println!("==========================================================================================================");
+    println!("==unwrap()========================================================================================================");
     println!("                                       RUST DX Tracker: ");
     println!("                                          By DD5HT");
     println!("==========================================================================================================");
-    //TODO add samples to real tests
+    //TODO: add samples to real tests
     insert_call("DL3LAR");
     insert_call("DP4B");
     insert_call("DD5HT");
     cluster();
 }*/
-//TODO
+//TODO:
 //Add function to clean obvious malformated entries
 
 ///Filters the cluster entries and returns a cleaned up vector of strings
@@ -41,8 +46,8 @@ fn filter_entry(entry: String) -> Vec<String> {
          .for_each(|x| output.push(String::from(x)));
     output
 }
-//TODO write TEST for function
-//TODO add return type
+//TODO: write TEST for function
+//TODO: add return type
 ///Takes formated entries and filters them: entry and checks if callsign from
 ///searchlist is in entry
 fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) {
@@ -72,7 +77,7 @@ pub fn connect_to_cluster(cluster: &str, call: &str) -> Result<String, String> {
     for _ in 0..10 {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
-        //TODO add propper callsignlist instead of vec!["DD5HT"]
+        //TODO: add propper callsignlist instead of vec!["DD5HT"]
         get_callsign(&filter_entry(buffer),CALLS.to_vec());  //Put the Buffer into filter function
     }
     Ok(String::from("Worked"))
@@ -99,7 +104,7 @@ pub fn insert_call(call: &str) -> Result<&str, String> {
     if call.len() < 3 || call.len() > 20 {
         return Err(String::from("Invalid call format!"));
     }
-    //TODO add ascii filtering
+    //TODO: add ascii filtering
     let mut new_call = String::from(call);
     let list = open_callsignlist();
     if list.contains(&new_call) {
@@ -112,18 +117,18 @@ pub fn insert_call(call: &str) -> Result<&str, String> {
         let mut file = OpenOptions::new()
             .append(true)
             .open("calls.csv")
-            .unwrap(); // Add better error Handling here
+            .unwrap(); //TODO: Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
         return Ok(call);
     }
 }
-//FIXME
+//FIXME:
 fn remove_call(call: &str) -> Result<&str, &str> {
     let mut file = OpenOptions::new();
         
     unimplemented!();
 }
-//TODO Remove TESTS?
+//TODO: Remove TESTS?
 #[cfg(test)]
 mod tests {
     use super::*;
