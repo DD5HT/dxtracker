@@ -116,11 +116,11 @@ pub fn insert_call(call: &str) -> Option<&str> {
         return Some(call);
     }
 }
-
+//FIXME
 fn remove_call(call: &str) {
     unimplemented!();
 }
-
+//TODO Remove TESTS?
 #[cfg(test)]
 mod tests {
     use super::*;
