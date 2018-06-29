@@ -6,40 +6,37 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::OpenOptions;
 
-
 pub mod cluster;
 
 //remove static
 lazy_static! {
     static ref CALLS: Vec<String> = open_callsignlist(); 
 }
-
 //TODO:
 // use serde for serializing data
 // At start of programm desizerlize all data
 // serlize all data after each read and write
 // solves 
 
-/**fn main() {
-   
-}*/
 //TODO:
 //Add function to clean obvious malformated entries
 
 //TODO: write TEST for function
-//TODO: add return type
-///Takes formated entries and filters them: entry and checks if callsign from
-///searchlist is in entry
-pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) {
+//Maybe return vector instead of String?
+///Takes a formated dxcluster str vector and the list of all callsigns
+///looks if callsign from spotted cluster is in list
+pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Option<String>{
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
         let call = entry[2].as_ref();
         let freq = entry[1].as_ref();
         let mode = entry[3].as_ref();
         match searchlist.into_iter().find(|x| x == call) {
-        Some(c) => println!("Spotted {} on {} by {} in {}",c, freq, spotter, mode),
-        None => () ,
+            Some(c) => Some(format!("Spotted {} on {} by {} in {}",c, freq, spotter, mode)),
+            None => None ,
         }
+    } else {
+        None
     }
 }
 fn open_callsignlist() -> Vec<String> {
