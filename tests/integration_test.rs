@@ -7,8 +7,9 @@ fn cluster_insertion_test() {
     assert_eq!(dxtracker::insert_call(call), Ok(call));
 
 }
+/*
 #[test]
-fn cluster_connection_test(){
+fn cluster_connection_test() {
     use dxtracker::cluster::{connect};
     
     let call = "DD5HT";
@@ -16,3 +17,4 @@ fn cluster_connection_test(){
     connect(cluster, call);
 
 }
+*/
