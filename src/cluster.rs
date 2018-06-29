@@ -7,22 +7,32 @@ use super::{CALLS, get_callsign};
 /// Starts the DX Cluster and connects to it via the given cluster address and call
 /// It repeatedly clals the get_callsign function with the filtered buffer
 /// entries
-pub fn connect(cluster: &str, call: &str) -> Result<String, String> {
+pub fn connect(cluster: &str, call: &str) {
+
+    use std::{thread, time};
+
+    let wait = time::Duration::from_secs(1);
+    let now = time::Instant::now();
+
+    thread::sleep(wait);
+
     //Connect to dx-cluster server
-    let mut stream = TcpStream::connect(cluster).unwrap();
+    let mut stream = TcpStream::connect(cluster).expect("Can't connect to Cluster");
     //Write callsign to telnet server to start getting cluster messages.
+    thread::sleep(wait);
     let _ = stream.write(&call.as_bytes());
 
     let mut reader = BufReader::new(stream);
     //Write no function for cluster
     //Add multithreading
-    for _ in 0..10 {
+    loop {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
         //TODO: add propper callsignlist instead of vec!["DD5HT"]
-        get_callsign(&filter_entry(buffer),CALLS.to_vec());  //Put the Buffer into filter function
+        println!("{}", buffer);
+
+        //get_callsign(&filter_entry(buffer),CALLS.to_vec());  //Put the Buffer into filter function
     }
-    Ok(String::from("Worked"))
 }
 
 ///Filters the cluster entries and returns a cleaned up vector of strings

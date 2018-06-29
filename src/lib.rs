@@ -76,7 +76,7 @@ pub fn insert_call(call: &str) -> Result<&str, String> {
         let mut file = OpenOptions::new()
             .append(true)
             .open("calls.csv")
-            .unwrap(); //TODO: Add better error Handling here
+            .expect("Can't open file"); //TODO: Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
         return Ok(call);
     }
