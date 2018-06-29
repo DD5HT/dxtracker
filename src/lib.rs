@@ -21,33 +21,11 @@ lazy_static! {
 // solves 
 
 /**fn main() {
-    println!("==unwrap()========================================================================================================");
-    println!("                                       RUST DX Tracker: ");
-    println!("                                          By DD5HT");
-    println!("==========================================================================================================");
-    //TODO: add samples to real tests
-    insert_call("DL3LAR");
-    insert_call("DP4B");
-    insert_call("DD5HT");
-    cluster();
+   
 }*/
 //TODO:
 //Add function to clean obvious malformated entries
 
-///Filters the cluster entries and returns a cleaned up vector of strings
-fn filter_entry(entry: String) -> Vec<String> {
-    let mut output: Vec<String> = Vec::with_capacity(16); //Malfromated entries can lead to new memory allocation
-    entry.trim_right_matches("\r\n")
-         .split(" ")
-         .filter(|&t| match t {
-             "de" => false,
-             "DX" => false,
-             _    => true,
-             })
-         .filter(|t| !t.is_empty())
-         .for_each(|x| output.push(String::from(x)));
-    output
-}
 //TODO: write TEST for function
 //TODO: add return type
 ///Takes formated entries and filters them: entry and checks if callsign from
@@ -64,8 +42,6 @@ pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) {
         }
     }
 }
-
-
 fn open_callsignlist() -> Vec<String> {
     let file = BufReader::new(File::open("calls.csv").expect("ERROR reading file"));
     let mut calls: Vec<String> = Vec::new(); 
