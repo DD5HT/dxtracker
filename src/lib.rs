@@ -1,3 +1,4 @@
+#![feature(vec_remove_item)]
 #[macro_use]
 extern crate lazy_static;
 
@@ -9,10 +10,11 @@ use std::fs::OpenOptions;
 pub mod cluster;
 
 //remove static
+/*
 lazy_static! {
     static ref CALLS: Vec<String> = open_callsignlist("calls.csv"); 
 }
-
+*/
 //TODO:
 // use serde for serializing data
 // At start of programm desizerlize all data
@@ -61,10 +63,9 @@ fn open_callsignlist(list: &str) -> Vec<String> {
 /// assert_eq!(insert_call(call),Ok(call));
 /// ´´´
 pub fn insert_call(call: &str) -> Result<&str, String> {
-    if call.len() < 3 || call.len() > 20 {
-        return Err(String::from("Invalid call format!"));
-    }
-    //TODO: add ascii filtering
+    
+    check_call(call)?;
+
     let mut new_call = String::from(call);
     let list = open_callsignlist("calls.csv");
     if list.contains(&new_call) {
@@ -83,11 +84,44 @@ pub fn insert_call(call: &str) -> Result<&str, String> {
     }
 }
 
-//FIXME:
-fn remove_call(call: &str) -> Result<&str, &str> {
-    let mut file = OpenOptions::new();
-        
+///Removes a given call and returns it if it was successful.
+pub fn remove_call(call: &str) -> Result<&str, &str> {
+    
+    let list = open_callsignlist("calls.csv");
+    let newcall = call.to_string();
+    if list.contains(&newcall) {
+        println!("Removing: {}",newcall);
+        let mut newlist = list.clone();
+        newlist.remove_item(&newcall).unwrap();
+
+        let mut file = OpenOptions::new()
+            .write(true)
+            .truncate(true)
+            .open("calls.csv")
+            .expect("Can't open file");
+
+        for i in newlist {
+            let content = i + "\n";
+            file.write(content.as_bytes()).unwrap();
+        }
+        return Ok(call);
+
+    }
+    Err("Can't remove Callsign!")
+}
+
+fn reset_list() {
     unimplemented!();
+}
+
+///Checks if call invalid
+fn check_call(call:&str) -> Result<&str, String> {
+    if call.len() < 3 || call.len() > 20 {
+        return Err(String::from("Invalid call format!"));
+    }
+    else {
+        Ok(call)
+    }
 }
 
 #[cfg(test)]

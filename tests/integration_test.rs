@@ -5,7 +5,7 @@ fn cluster_insertion_test() {
     //TODO: WIPE DATA before first insert
     let call = "TESTCALL";
     assert_eq!(dxtracker::insert_call(call), Ok(call));
-
+    assert_eq!(dxtracker::remove_call(call), Ok(call));
 }
 /*
 #[test]

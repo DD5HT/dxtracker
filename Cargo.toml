@@ -2,6 +2,7 @@
 name = "dx-analyser"
 version = "0.1.0"
 authors = ["hendrik@dd5ht.de"]
+autobins = false
 
 [dependencies]
 lazy_static = "1.0"
