@@ -2,10 +2,12 @@
 extern crate lazy_static;
 
 use std::fs::File;
-use std::net::TcpStream;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::OpenOptions;
+
+
+pub mod cluster;
 
 //remove static
 lazy_static! {
@@ -50,7 +52,7 @@ fn filter_entry(entry: String) -> Vec<String> {
 //TODO: add return type
 ///Takes formated entries and filters them: entry and checks if callsign from
 ///searchlist is in entry
-fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) {
+pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) {
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
         let call = entry[2].as_ref();
@@ -62,26 +64,7 @@ fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) {
         }
     }
 }
-/// Starts the DX Cluster and connects to it via the given cluster address and call
-/// It repeatedly clals the get_callsign function with the filtered buffer
-/// entries
-pub fn connect_to_cluster(cluster: &str, call: &str) -> Result<String, String> {
-    //Connect to dx-cluster server
-    let mut stream = TcpStream::connect(cluster).unwrap();
-    //Write callsign to telnet server to start getting cluster messages.
-    let _ = stream.write(&call.as_bytes());
 
-    let mut reader = BufReader::new(stream);
-    //Write no function for cluster
-    //Add multithreading
-    for _ in 0..10 {
-        let mut buffer = String::new(); // Create a new Buffer
-        reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
-        //TODO: add propper callsignlist instead of vec!["DD5HT"]
-        get_callsign(&filter_entry(buffer),CALLS.to_vec());  //Put the Buffer into filter function
-    }
-    Ok(String::from("Worked"))
-}
 
 fn open_callsignlist() -> Vec<String> {
     let file = BufReader::new(File::open("calls.csv").expect("ERROR reading file"));
