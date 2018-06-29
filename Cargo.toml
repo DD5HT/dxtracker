@@ -5,6 +5,7 @@ authors = ["hendrik@dd5ht.de"]
 
 [dependencies]
 lazy_static = "1.0"
+clap = "*"
 
 [profile.release]
 lto = true
