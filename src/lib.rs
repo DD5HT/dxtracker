@@ -1,6 +1,4 @@
 #![feature(vec_remove_item)]
-#[macro_use]
-extern crate lazy_static;
 
 use std::fs::File;
 use std::io::prelude::*;
@@ -9,20 +7,12 @@ use std::fs::OpenOptions;
 
 pub mod cluster;
 
-//remove static
-/*
-lazy_static! {
-    static ref CALLS: Vec<String> = open_callsignlist("calls.csv"); 
+struct SPOT {
+    call: String,
+    freq: f64,
+    mode: String,
+    spotter: String,
 }
-*/
-//TODO:
-// use serde for serializing data
-// At start of programm desizerlize all data
-// serlize all data after each read and write
-// solves 
-
-//TODO:
-//Add function to clean obvious malformated entries
 
 //TODO: write TEST for function
 //Maybe return vector instead of String?
