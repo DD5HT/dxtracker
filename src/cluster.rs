@@ -2,6 +2,7 @@ use std::net::TcpStream;
 use std::io::BufReader;
 use std::io::prelude::{BufRead, Write};
 
+use super::*;
 //use super::{CALLS, get_callsign};
 
 /// Starts the DX Cluster and connects to it via the given cluster address and call
@@ -21,8 +22,8 @@ pub fn connect(cluster: &str, call: &str) {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
         //TODO: add propper callsignlist instead of vec!["DD5HT"]
-        println!("{:?}", buffer);
-        //get_callsign(&filter_entry(buffer),CALLS.to_vec());  //Put the Buffer into filter function
+        println!("{:?}", filter_entry(buffer));
+        //get_callsign(&filter_entry(buffer),callsigns.clone());  //Put the Buffer into filter function
     }
 }
 

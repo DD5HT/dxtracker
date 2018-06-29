@@ -34,7 +34,7 @@ pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Opti
 }
 
 ///opens a list 
-fn open_callsignlist(list: &str) -> Vec<String> {
+pub fn open_callsignlist(list: &str) -> Vec<String> {
     let file = BufReader::new(File::open(list).expect("ERROR reading file"));
     let mut calls: Vec<String> = Vec::new(); 
     for line in file.lines() {
