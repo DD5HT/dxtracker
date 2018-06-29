@@ -8,19 +8,11 @@ use super::{CALLS, get_callsign};
 /// It repeatedly clals the get_callsign function with the filtered buffer
 /// entries
 pub fn connect(cluster: &str, call: &str) {
-
-    use std::{thread, time};
-
-    let wait = time::Duration::from_secs(1);
-    let now = time::Instant::now();
-
-    thread::sleep(wait);
-
     //Connect to dx-cluster server
     let mut stream = TcpStream::connect(cluster).expect("Can't connect to Cluster");
     //Write callsign to telnet server to start getting cluster messages.
-    thread::sleep(wait);
-    let _ = stream.write(&call.as_bytes());
+    let corrected_call = call.to_owned() + "\n";
+    let _ = stream.write(&corrected_call.as_bytes());
 
     let mut reader = BufReader::new(stream);
     //Write no function for cluster
@@ -29,8 +21,7 @@ pub fn connect(cluster: &str, call: &str) {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
         //TODO: add propper callsignlist instead of vec!["DD5HT"]
-        println!("{}", buffer);
-
+        println!("{:?}", buffer);
         //get_callsign(&filter_entry(buffer),CALLS.to_vec());  //Put the Buffer into filter function
     }
 }
