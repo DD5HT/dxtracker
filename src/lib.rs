@@ -10,7 +10,7 @@ pub mod cluster;
 
 //remove static
 lazy_static! {
-    static ref CALLS: Vec<String> = open_callsignlist(); 
+    static ref CALLS: Vec<String> = open_callsignlist("calls.csv"); 
 }
 
 //TODO:
@@ -41,8 +41,9 @@ pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Opti
     }
 }
 
-fn open_callsignlist() -> Vec<String> {
-    let file = BufReader::new(File::open("calls.csv").expect("ERROR reading file"));
+///opens a list 
+fn open_callsignlist(list: &str) -> Vec<String> {
+    let file = BufReader::new(File::open(list).expect("ERROR reading file"));
     let mut calls: Vec<String> = Vec::new(); 
     for line in file.lines() {
         match line {
@@ -65,7 +66,7 @@ pub fn insert_call(call: &str) -> Result<&str, String> {
     }
     //TODO: add ascii filtering
     let mut new_call = String::from(call);
-    let list = open_callsignlist();
+    let list = open_callsignlist("calls.csv");
     if list.contains(&new_call) {
         println!("{} is already in callsign list!", new_call );
         return Err(format!("{} is alread in callsign list!", new_call));
@@ -87,4 +88,28 @@ fn remove_call(call: &str) -> Result<&str, &str> {
     let mut file = OpenOptions::new();
         
     unimplemented!();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn get_callsign_found() {
+        let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
+        let searchlist: Vec<String> = vec![String::from("IK3VUU")];
+        assert_eq!(get_callsign(&entry, searchlist).is_some(), true);
+    }
+    
+    #[test]
+    fn get_callsign_not_found() {
+        let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
+        let searchlist: Vec<String> = vec![String::from("NOCALL")];
+        assert_eq!(get_callsign(&entry, searchlist).is_none(), true);
+    }
+    /*
+    #[test]
+    fn open_callsignlist_test() {
+    }
+    */
 }

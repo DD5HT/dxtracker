@@ -1,8 +1,8 @@
 extern crate dxtracker;
 extern crate clap;
 
+use dxtracker::cluster;
 use clap::{Arg, App};
-use dxtracker::*;
 
 fn main() {
     let matches = App::new("DX Tool")
@@ -26,7 +26,7 @@ fn main() {
         let call = "DD5HT";
         let cluster = "cluster.dl9gtb.de:8000";
         println!("Connecting to {} with callsign: {}", cluster.to_uppercase(), call);
-        dxtracker::cluster::connect(cluster, call);
+        cluster::connect(cluster, call);
         println!("{}","jo" );
     }
    
