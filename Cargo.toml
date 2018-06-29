@@ -1,5 +1,5 @@
 [package]
-name = "dxtracker"
+name = "dx-analyser"
 version = "0.1.0"
 authors = ["hendrik@dd5ht.de"]
 
@@ -9,3 +9,10 @@ lazy_static = "1.0"
 [profile.release]
 lto = true
 
+[lib]
+name = "dxtracker"
+path = "src/lib.rs"
+
+[[bin]]
+name = "dxtool"
+path = "src/bin.rs"
