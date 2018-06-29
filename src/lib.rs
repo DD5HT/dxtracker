@@ -12,6 +12,7 @@ pub mod cluster;
 lazy_static! {
     static ref CALLS: Vec<String> = open_callsignlist(); 
 }
+
 //TODO:
 // use serde for serializing data
 // At start of programm desizerlize all data
@@ -39,6 +40,7 @@ pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Opti
         None
     }
 }
+
 fn open_callsignlist() -> Vec<String> {
     let file = BufReader::new(File::open("calls.csv").expect("ERROR reading file"));
     let mut calls: Vec<String> = Vec::new(); 
@@ -51,6 +53,7 @@ fn open_callsignlist() -> Vec<String> {
     println!("Loaded the following calls: {:?}", calls );
     calls
 }
+
 ///Inserts a call into the Callsign csv list
 /// ´´´
 /// let call = "TESTCALL";
@@ -78,6 +81,7 @@ pub fn insert_call(call: &str) -> Result<&str, String> {
         return Ok(call);
     }
 }
+
 //FIXME:
 fn remove_call(call: &str) -> Result<&str, &str> {
     let mut file = OpenOptions::new();

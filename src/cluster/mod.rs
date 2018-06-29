@@ -3,6 +3,7 @@ use std::io::BufReader;
 use std::io::prelude::{BufRead, Write};
 
 use super::{CALLS, get_callsign};
+
 /// Starts the DX Cluster and connects to it via the given cluster address and call
 /// It repeatedly clals the get_callsign function with the filtered buffer
 /// entries
