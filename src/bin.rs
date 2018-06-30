@@ -46,7 +46,6 @@ fn main() {
     //println!("Value for config: {}", config);
 
     if let Some(call) = matches.value_of("ADD") {
-        //TODO: Add error handling for failing to insert a callsign
         match dxtracker::insert_call(call){
             Ok(i) => println!("Added {} to callsign list", i ),
             Err(e) => println!("{}",e),
@@ -54,7 +53,6 @@ fn main() {
     };
 
     if let Some(call) = matches.value_of("REMOVE") {
-        //TODO: Add error handling for failing to insert a callsign
         match dxtracker::remove_call(call){
             Ok(i) => println!("Removed {} from the callsign list", i ),
             Err(e) => println!("{}",e),
