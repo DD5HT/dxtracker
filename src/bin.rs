@@ -19,15 +19,12 @@ fn main() {
                                .value_name("FILE")
                                .help("Sets a custom config file")
                                .takes_value(true))
-<<<<<<< HEAD
                           .arg(Arg::with_name("ADD")
                                .short("a")
                                .long("add")
                                .value_name("CALL")
                                .help("Adds a new Callsign to the Database")
                                .takes_value(true))
-=======
->>>>>>> a26030c7295d046eab1f3a96eb476c0c329169fd
                           .get_matches();
 
 
@@ -42,12 +39,12 @@ fn main() {
     let config = matches.value_of("config").unwrap_or("default.conf");
     println!("Value for config: {}", config);
 
-<<<<<<< HEAD
     if let Some(call) = matches.value_of("ADD") {
         //TODO: Add error handling for failing to insert a callsign
-        println!("Added Callsign: {}", dxtracker::insert_call(call).unwrap()) 
+        match dxtracker::insert_call(call){
+            Ok(i) => println!("Added {} to callsign list", i ),
+            Err(e) => println!("{}",e),
+        }
     };
 
-=======
->>>>>>> a26030c7295d046eab1f3a96eb476c0c329169fd
 }

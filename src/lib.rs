@@ -45,11 +45,7 @@ pub fn open_callsignlist(list: &str) -> Vec<String> {
             Err(e) => println!("Ups: {}",e ),
         }
     }
-<<<<<<< HEAD
     //println!("Loaded the following calls: {:?}", calls );
-=======
-    println!("Loaded the following calls: {:?}", calls );
->>>>>>> a26030c7295d046eab1f3a96eb476c0c329169fd
     calls
 }
 
@@ -62,50 +58,26 @@ pub fn insert_call(call: &str) -> Result<&str, String> {
     
     check_call(call)?;
 
-<<<<<<< HEAD
-    let mut new_call = String::from(call).to_uppercase();
-    let list = open_callsignlist("calls.csv");
-
-    if list.contains(&new_call) {
-        println!("{} is already in callsign list!", new_call );
-        return Err(format!("{} is alread in callsign list!", new_call));
-    }else {
-=======
     let mut new_call = String::from(call);
     let list = open_callsignlist("calls.csv");
     if list.contains(&new_call) {
-        println!("{} is already in callsign list!", new_call );
-        return Err(format!("{} is alread in callsign list!", new_call));
-    }
-    else {
-        println!("Inserting: {}", new_call );
->>>>>>> a26030c7295d046eab1f3a96eb476c0c329169fd
+        return Err(format!("{} is alread in the callsign list!", new_call));
+    }else {
         new_call.push_str("\n");
         let mut file = OpenOptions::new()
             .append(true)
             .open("calls.csv")
             .expect("Can't open file"); //TODO: Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
-<<<<<<< HEAD
-        return Ok(new_call);
-=======
         return Ok(call);
->>>>>>> a26030c7295d046eab1f3a96eb476c0c329169fd
     }
 }
 
 ///Removes a given call and returns it if it was successful.
-<<<<<<< HEAD
 pub fn remove_call(call: &str) -> Result<&str, &str> {   
     let list = open_callsignlist("calls.csv");
     let newcall = call.to_string();
     
-=======
-pub fn remove_call(call: &str) -> Result<&str, &str> {
-    
-    let list = open_callsignlist("calls.csv");
-    let newcall = call.to_string();
->>>>>>> a26030c7295d046eab1f3a96eb476c0c329169fd
     if list.contains(&newcall) {
         println!("Removing: {}",newcall);
         let mut newlist = list.clone();
@@ -122,7 +94,6 @@ pub fn remove_call(call: &str) -> Result<&str, &str> {
             file.write(content.as_bytes()).unwrap();
         }
         return Ok(call);
-
     }
     Err("Can't remove Callsign!")
 }
@@ -135,12 +106,7 @@ fn reset_list() {
 fn check_call(call:&str) -> Result<&str, String> {
     if call.len() < 3 || call.len() > 20 {
         return Err(String::from("Invalid call format!"));
-<<<<<<< HEAD
-    }else {
-=======
-    }
-    else {
->>>>>>> a26030c7295d046eab1f3a96eb476c0c329169fd
+    } else {
         Ok(call)
     }
 }
