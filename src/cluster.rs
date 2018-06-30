@@ -13,15 +13,25 @@ pub fn connect(cluster: &str, call: &str) {
     let _ = stream.write(&corrected_call.as_bytes());
 
     let mut reader = BufReader::new(stream);
+<<<<<<< HEAD
     let callsigns = ::open_callsignlist("calls.csv");
 
+=======
+    //Write no function for cluster
+    //Add multithreading
+>>>>>>> a26030c7295d046eab1f3a96eb476c0c329169fd
     loop {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
         //TODO: add propper callsignlist instead of vec!["DD5HT"]
+<<<<<<< HEAD
         
         //println!("{:?}", filter_entry(buffer));
         ::get_callsign(&filter_entry(buffer), callsigns.clone());  //Put the Buffer into filter function
+=======
+        println!("{:?}", filter_entry(buffer));
+        //get_callsign(&filter_entry(buffer),callsigns.clone());  //Put the Buffer into filter function
+>>>>>>> a26030c7295d046eab1f3a96eb476c0c329169fd
     }
 }
 
