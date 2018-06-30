@@ -1,81 +1,41 @@
-#[macro_use]
-extern crate lazy_static;
+#![feature(vec_remove_item)]
 
 use std::fs::File;
-use std::net::TcpStream;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::OpenOptions;
 
-static CLUSTER: &str = "cluster.dl9gtb.de:8000";
-static CALL: [u8; 6] = *b"dd5ht\n";
+pub mod cluster;
 
-lazy_static! {
-    static ref CALLS: Vec<String> = open_callsignlist(); 
+struct SPOT {
+    call: String,
+    freq: f64,
+    mode: String,
+    spotter: String,
 }
 
-
-/**fn main() {
-    println!("==========================================================================================================");
-    println!("                                       RUST DX Tracker: ");
-    println!("                                          By DD5HT");
-    println!("==========================================================================================================");
-    //TODO add samples to real tests
-    insert_call("DL3LAR");
-    insert_call("DP4B");
-    insert_call("DD5HT");
-    cluster();
-}*/
-//TODO
-//Add function to clean obvious malformated entries
-
-///Filters the cluster entries and returns a clean vector of strings
-fn filter_entry(entry: String) -> Vec<String> {
-    let mut output: Vec<String> = Vec::with_capacity(16); //Malfromated entries can lead to new memory allocation
-    entry.trim_right_matches("\r\n")
-         .split(" ")
-         .filter(|&t| match t {
-             "de" => false,
-             "DX" => false,
-             _    => true,
-             })
-         .filter(|t| !t.is_empty())
-         .for_each(|x| output.push(String::from(x)));
-    output
-}
-
-fn get_callsign<T: AsRef<str>>(entry: &[T]) {
-    //let sample: Vec<&str> = vec!["DD5HT","EI9KF","DL3LAR","HA3FTV","HA0NAR","SM0RRX","RA6QM","RU3X"];
-    let sample = CALLS.clone();
+//TODO: write TEST for function
+//Maybe return vector instead of String?
+///Takes a formated dxcluster str vector and the list of all callsigns
+///looks if callsign from spotted cluster is in list
+pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Option<String>{
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
         let call = entry[2].as_ref();
         let freq = entry[1].as_ref();
         let mode = entry[3].as_ref();
-        match sample.into_iter().find(|x| x == call) {
-        Some(c) => println!("Spotted {} on {} by {} in {}",c, freq, spotter, mode),
-        None => () ,
+        match searchlist.into_iter().find(|x| x == call) {
+            Some(c) => Some(format!("Spotted {} on {} by {} in {}",c, freq, spotter, mode)),
+            None => None ,
         }
+    } else {
+        None
     }
 }
 
-pub fn cluster() {
-    //Connect to dx-cluster server
-    let mut stream = TcpStream::connect(CLUSTER).unwrap();
-    //Write callsign to telnet server to start getting cluster messages.
-    let _ = stream.write(&CALL);
-
-    let mut reader = BufReader::new(stream);
-    loop {
-        let mut buffer = String::new(); // Create a new Buffer
-        reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
-        get_callsign(&filter_entry(buffer));  //Put the Buffer into filter function
-
-    }
-}
-
-fn open_callsignlist() -> Vec<String> {
-    let file = BufReader::new(File::open("calls.csv").expect("ERROR reading file"));
+///opens a list 
+pub fn open_callsignlist(list: &str) -> Vec<String> {
+    let file = BufReader::new(File::open(list).expect("ERROR reading file"));
     let mut calls: Vec<String> = Vec::new(); 
     for line in file.lines() {
         match line {
@@ -87,28 +47,71 @@ fn open_callsignlist() -> Vec<String> {
     calls
 }
 
-pub fn insert_call(call: &str) ->Option<&str>{ //ADD Result as return mabye?
-    //let mut new_call = String::from("DD5HT");
+///Inserts a call into the Callsign csv list
+/// ´´´
+/// let call = "TESTCALL";
+/// assert_eq!(insert_call(call),Ok(call));
+/// ´´´
+pub fn insert_call(call: &str) -> Result<&str, String> {
+    
+    check_call(call)?;
+
     let mut new_call = String::from(call);
-    let list = open_callsignlist();
+    let list = open_callsignlist("calls.csv");
     if list.contains(&new_call) {
         println!("{} is already in callsign list!", new_call );
-        return None;
+        return Err(format!("{} is alread in callsign list!", new_call));
     }
     else {
         println!("Inserting: {}", new_call );
         new_call.push_str("\n");
         let mut file = OpenOptions::new()
-        .append(true)
-        .open("calls.csv")
-        .unwrap();
+            .append(true)
+            .open("calls.csv")
+            .expect("Can't open file"); //TODO: Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
-        return Some(call);
+        return Ok(call);
     }
 }
 
-fn remove_call(call: &str) {
+///Removes a given call and returns it if it was successful.
+pub fn remove_call(call: &str) -> Result<&str, &str> {
+    
+    let list = open_callsignlist("calls.csv");
+    let newcall = call.to_string();
+    if list.contains(&newcall) {
+        println!("Removing: {}",newcall);
+        let mut newlist = list.clone();
+        newlist.remove_item(&newcall).unwrap();
+
+        let mut file = OpenOptions::new()
+            .write(true)
+            .truncate(true)
+            .open("calls.csv")
+            .expect("Can't open file");
+
+        for i in newlist {
+            let content = i + "\n";
+            file.write(content.as_bytes()).unwrap();
+        }
+        return Ok(call);
+
+    }
+    Err("Can't remove Callsign!")
+}
+
+fn reset_list() {
     unimplemented!();
+}
+
+///Checks if call invalid
+fn check_call(call:&str) -> Result<&str, String> {
+    if call.len() < 3 || call.len() > 20 {
+        return Err(String::from("Invalid call format!"));
+    }
+    else {
+        Ok(call)
+    }
 }
 
 #[cfg(test)]
@@ -116,13 +119,21 @@ mod tests {
     use super::*;
 
     #[test]
-    fn filter_entry_test() {
-        let sample0 = String::from("DX de EA5WU-#:    3508.0  IK3VUU       CW 19 dB 20 WPM CQ             2149Z");
-        let expected0: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
-        assert_eq!(filter_entry(sample0),expected0);
-
-        let sample1 = String::from("DX de K8WHA:     14081.0  TG9AHM       CQ DX RTTY Correction Freq     2150Z");
-        let expected1: Vec<&str> = vec!["K8WHA:", "14081.0", "TG9AHM", "CQ", "RTTY", "Correction", "Freq", "2150Z"];
-        assert_eq!(filter_entry(sample1),expected1);
+    fn get_callsign_found() {
+        let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
+        let searchlist: Vec<String> = vec![String::from("IK3VUU")];
+        assert_eq!(get_callsign(&entry, searchlist).is_some(), true);
     }
+    
+    #[test]
+    fn get_callsign_not_found() {
+        let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
+        let searchlist: Vec<String> = vec![String::from("NOCALL")];
+        assert_eq!(get_callsign(&entry, searchlist).is_none(), true);
+    }
+    /*
+    #[test]
+    fn open_callsignlist_test() {
+    }
+    */
 }
