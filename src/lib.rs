@@ -15,9 +15,8 @@ struct SPOT {
     spotter: String,
 }
 */
-
-///Takes a formated dxcluster str vector and the list of all callsigns.
-///looks if callsign from spotted cluster is in list.
+///Takes a formated dxcluster str vector and the list of all callsigns
+///looks if callsign from spotted cluster is in list
 pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Option<String>{
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
@@ -33,7 +32,7 @@ pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Opti
     }
 }
 
-///Opens the given list file and return a Vector with all the Callsigns.
+///Opens the given list file and return a Vector with all the Callsigns
 pub fn open_callsignlist(list: &str) -> Vec<String> {
     let file = BufReader::new(File::open(list).expect("ERROR reading file"));
     let mut calls: Vec<String> = Vec::new(); 
@@ -47,11 +46,11 @@ pub fn open_callsignlist(list: &str) -> Vec<String> {
 }
 
 ///Inserts a call into the Callsign csv list returns the call if it was successful.
-pub fn insert_call(call: &str) -> Result<&str, String> {
+pub fn insert_call(call: &str) -> Result<String, String> {
     
     check_call(call)?;
 
-    let mut new_call = String::from(call);
+    let mut new_call = String::from(call.to_uppercase());
     let list = open_callsignlist("calls.csv");
     if list.contains(&new_call) {
         return Err(format!("{} is alread in the callsign list!", new_call));
@@ -62,17 +61,16 @@ pub fn insert_call(call: &str) -> Result<&str, String> {
             .open("calls.csv")
             .expect("Can't open file"); //TODO: Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
-        return Ok(call);
+        return Ok(call.to_uppercase());
     }
 }
 
 ///Removes a given call and returns it if it was successful.
-pub fn remove_call(call: &str) -> Result<&str, &str> {   
+pub fn remove_call(call: &str) -> Result<String, String> {   
     let list = open_callsignlist("calls.csv");
-    let newcall = call.to_string();
+    let newcall = call.to_string().to_uppercase();
     
     if list.contains(&newcall) {
-        println!("Removing: {}",newcall);
         let mut newlist = list.clone();
         newlist.remove_item(&newcall).unwrap();
 
@@ -86,9 +84,9 @@ pub fn remove_call(call: &str) -> Result<&str, &str> {
             let content = i + "\n";
             file.write(content.as_bytes()).unwrap();
         }
-        return Ok(call);
+        return Ok(call.to_uppercase());
     }
-    Err("Can't remove Callsign!")
+    Err("Can not remove the callsign!".to_string())
 }
 
 fn reset_list() -> Result<String, String> {

@@ -1,15 +1,15 @@
 extern crate dxtracker;
 
 #[test]
-fn cluster_insertion_test() {
-    let call = "TESTCALL";
-
-    assert_eq!(dxtracker::insert_call(call), Ok(call));
-    assert_eq!(dxtracker::remove_call(call), Ok(call));
+fn cluster_insert_remove() {
+    let call = "TeStCaLl";
+    let formated_call = call.to_uppercase();
+    assert_eq!(dxtracker::insert_call(call), Ok(formated_call.clone()));
+    assert_eq!(dxtracker::remove_call(call), Ok(formated_call));
 }
 
 #[test]
-fn open_callsign_list_test() {
+fn open_callsign_list() {
     let list = "calls.csv";
 
     assert_eq!(dxtracker::open_callsignlist(list), vec!["#######"]);

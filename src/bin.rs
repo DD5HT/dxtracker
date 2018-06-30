@@ -23,7 +23,13 @@ fn main() {
                                .short("a")
                                .long("add")
                                .value_name("CALL")
-                               .help("Adds a new Callsign to the Database")
+                               .help("Adds a new callsign to the list.")
+                               .takes_value(true))
+                          .arg(Arg::with_name("REMOVE")
+                               .short("r")
+                               .long("remove")
+                               .value_name("CALL")
+                               .help("Remove a callsign for the list.")
                                .takes_value(true))
                           .get_matches();
 
@@ -36,13 +42,21 @@ fn main() {
         println!("{}","jo" );
     }
    
-    let config = matches.value_of("config").unwrap_or("default.conf");
-    println!("Value for config: {}", config);
+    //let config = matches.value_of("config").unwrap_or("default.conf");
+    //println!("Value for config: {}", config);
 
     if let Some(call) = matches.value_of("ADD") {
         //TODO: Add error handling for failing to insert a callsign
         match dxtracker::insert_call(call){
             Ok(i) => println!("Added {} to callsign list", i ),
+            Err(e) => println!("{}",e),
+        }
+    };
+
+    if let Some(call) = matches.value_of("REMOVE") {
+        //TODO: Add error handling for failing to insert a callsign
+        match dxtracker::remove_call(call){
+            Ok(i) => println!("Removed {} from the callsign list", i ),
             Err(e) => println!("{}",e),
         }
     };
