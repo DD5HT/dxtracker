@@ -23,13 +23,13 @@ fn main() {
                                .short("a")
                                .long("add")
                                .value_name("CALL")
-                               .help("Adds a new callsign to the list.")
+                               .help("Adds a new callsign to the list")
                                .takes_value(true))
                           .arg(Arg::with_name("REMOVE")
                                .short("r")
                                .long("remove")
                                .value_name("CALL")
-                               .help("Remove a callsign for the list.")
+                               .help("Remove a callsign for the list")
                                .takes_value(true))
                           .get_matches();
 
@@ -47,14 +47,14 @@ fn main() {
 
     if let Some(call) = matches.value_of("ADD") {
         match dxtracker::insert_call(call){
-            Ok(i) => println!("Added {} to callsign list", i ),
+            Ok(i) => println!("Added {} to callsign list.", i),
             Err(e) => println!("{}",e),
         }
     };
 
     if let Some(call) = matches.value_of("REMOVE") {
         match dxtracker::remove_call(call){
-            Ok(i) => println!("Removed {} from the callsign list", i ),
+            Ok(i) => println!("Removed {} from the callsign list.", i),
             Err(e) => println!("{}",e),
         }
     };
