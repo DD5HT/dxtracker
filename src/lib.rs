@@ -35,7 +35,7 @@ pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Opti
     }
 }
 
-///opens a list 
+///Opens the given list file and return a Vector with all the Callsigns.
 pub fn open_callsignlist(list: &str) -> Vec<String> {
     let file = BufReader::new(File::open(list).expect("ERROR reading file"));
     let mut calls: Vec<String> = Vec::new(); 
@@ -45,15 +45,10 @@ pub fn open_callsignlist(list: &str) -> Vec<String> {
             Err(e) => println!("Ups: {}",e ),
         }
     }
-    //println!("Loaded the following calls: {:?}", calls );
     calls
 }
 
-///Inserts a call into the Callsign csv list
-/// ´´´
-/// let call = "TESTCALL";
-/// assert_eq!(insert_call(call),Ok(call));
-/// ´´´
+///Inserts a call into the Callsign csv list returns the call if it was successful.
 pub fn insert_call(call: &str) -> Result<&str, String> {
     
     check_call(call)?;
@@ -98,10 +93,13 @@ pub fn remove_call(call: &str) -> Result<&str, &str> {
     Err("Can't remove Callsign!")
 }
 
-fn reset_list() {
-    unimplemented!();
+fn reset_list() -> Result<String, String> {
+    unimplemented!()
 }
-
+//maybe result IO error?
+fn create_list(listname: &str) -> Result<&str, String>{
+    unimplemented!()
+}
 ///Checks if call invalid
 fn check_call(call:&str) -> Result<&str, String> {
     if call.len() < 3 || call.len() > 20 {
