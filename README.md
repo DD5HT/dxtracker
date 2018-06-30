@@ -6,7 +6,7 @@ A simple Rust Telnet Client, which connects to an DX Cluster Server. It also add
 
 ## TODO
 
-+ Better handling of CSV file
++ better handling of CSV file
 + search calls function
 + work extern api for interfacing with other programms
 
