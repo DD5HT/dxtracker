@@ -16,10 +16,8 @@ struct SPOT {
 }
 */
 
-//TODO: write TEST for function
-//Maybe return vector instead of String?
-///Takes a formated dxcluster str vector and the list of all callsigns
-///looks if callsign from spotted cluster is in list
+///Takes a formated dxcluster str vector and the list of all callsigns.
+///looks if callsign from spotted cluster is in list.
 pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Option<String>{
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
