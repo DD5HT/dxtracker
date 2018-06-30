@@ -45,7 +45,7 @@ pub fn open_callsignlist(list: &str) -> Vec<String> {
             Err(e) => println!("Ups: {}",e ),
         }
     }
-    println!("Loaded the following calls: {:?}", calls );
+    //println!("Loaded the following calls: {:?}", calls );
     calls
 }
 
@@ -58,29 +58,28 @@ pub fn insert_call(call: &str) -> Result<&str, String> {
     
     check_call(call)?;
 
-    let mut new_call = String::from(call);
+    let mut new_call = String::from(call).to_uppercase();
     let list = open_callsignlist("calls.csv");
+
     if list.contains(&new_call) {
         println!("{} is already in callsign list!", new_call );
         return Err(format!("{} is alread in callsign list!", new_call));
-    }
-    else {
-        println!("Inserting: {}", new_call );
+    }else {
         new_call.push_str("\n");
         let mut file = OpenOptions::new()
             .append(true)
             .open("calls.csv")
             .expect("Can't open file"); //TODO: Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
-        return Ok(call);
+        return Ok(new_call);
     }
 }
 
 ///Removes a given call and returns it if it was successful.
-pub fn remove_call(call: &str) -> Result<&str, &str> {
-    
+pub fn remove_call(call: &str) -> Result<&str, &str> {   
     let list = open_callsignlist("calls.csv");
     let newcall = call.to_string();
+    
     if list.contains(&newcall) {
         println!("Removing: {}",newcall);
         let mut newlist = list.clone();
@@ -110,8 +109,7 @@ fn reset_list() {
 fn check_call(call:&str) -> Result<&str, String> {
     if call.len() < 3 || call.len() > 20 {
         return Err(String::from("Invalid call format!"));
-    }
-    else {
+    }else {
         Ok(call)
     }
 }

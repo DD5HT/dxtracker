@@ -19,6 +19,12 @@ fn main() {
                                .value_name("FILE")
                                .help("Sets a custom config file")
                                .takes_value(true))
+                          .arg(Arg::with_name("ADD")
+                               .short("a")
+                               .long("add")
+                               .value_name("CALL")
+                               .help("Adds a new Callsign to the Database")
+                               .takes_value(true))
                           .get_matches();
 
 
@@ -32,5 +38,10 @@ fn main() {
    
     let config = matches.value_of("config").unwrap_or("default.conf");
     println!("Value for config: {}", config);
+
+    if let Some(call) = matches.value_of("ADD") {
+        //TODO: Add error handling for failing to insert a callsign
+        println!("Added Callsign: {}", dxtracker::insert_call(call).unwrap()) 
+    };
 
 }
