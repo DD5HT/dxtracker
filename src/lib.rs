@@ -7,12 +7,14 @@ use std::fs::OpenOptions;
 
 pub mod cluster;
 
+/*
 struct SPOT {
     call: String,
     freq: f64,
     mode: String,
     spotter: String,
 }
+*/
 
 //TODO: write TEST for function
 //Maybe return vector instead of String?
