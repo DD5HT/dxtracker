@@ -37,7 +37,7 @@ fn main() {
     if matches.is_present("START") {
         let call = "DD5HT";
         let cluster = "cluster.dl9gtb.de:8000";
-        println!("Connecting to {} with callsign: {}", cluster.to_uppercase(), call);
+        println!("Connecting to {} with callsign: {} ...", cluster.to_uppercase(), call);
         cluster::connect(cluster, call);
         println!("{}","jo" );
     }

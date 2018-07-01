@@ -1,7 +1,7 @@
 use std::net::TcpStream;
 use std::io::BufReader;
 use std::io::prelude::{BufRead, Write};
-
+use ::CALLS;
 /// Starts the DX Cluster and connects to it via the given cluster address and call
 /// It repeatedly clals the get_callsign function with the filtered buffer
 /// entries
@@ -13,7 +13,7 @@ pub fn connect(cluster: &str, call: &str) {
     let _ = stream.write(&corrected_call.as_bytes());
 
     let mut reader = BufReader::new(stream);
-    let callsigns = ::open_callsignlist(::CALLS);
+    let callsigns = ::open_callsignlist(&CALLS.to_str().unwrap());
     println!("Connection: Success");
     loop {
         let mut buffer = String::new(); // Create a new Buffer
