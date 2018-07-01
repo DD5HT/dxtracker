@@ -9,12 +9,9 @@ use std::io::BufReader;
 use std::fs::{OpenOptions, DirBuilder};
 use std::env;
 use std::io::ErrorKind::AlreadyExists;
+use std::path::{Path, PathBuf};
 
 pub mod cluster;
-
-lazy_static! {
-    static ref CALLS: std::path::PathBuf = env::home_dir().unwrap();
-}    
 
 /*
 struct SPOT {
@@ -42,7 +39,7 @@ pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Opti
 }
 
 ///Opens the given list file and return a Vector with all the Callsigns
-pub fn open_callsignlist(list: &str) -> Vec<String> {
+pub fn open_callsignlist(list: PathBuf) -> Vec<String> {
     let file = BufReader::new(File::open(list).expect("ERROR reading file"));
     let mut calls: Vec<String> = Vec::new(); 
     for line in file.lines() {
@@ -60,14 +57,14 @@ pub fn insert_call(call: &str) -> Result<String, String> {
     check_call(call)?;
 
     let mut new_call = String::from(call.to_uppercase());
-    let list = open_callsignlist(&CALLS.to_str().unwrap());
+    let list = open_callsignlist(get_directory());
     if list.contains(&new_call) {
         return Err(format!("{} is alread in the callsign list!", new_call));
     }else {
         new_call.push_str("\n");
         let mut file = OpenOptions::new()
             .append(true)
-            .open(&CALLS.to_str().unwrap())
+            .open(get_directory())
             .expect("Can't open file"); //TODO: Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
         return Ok(call.to_uppercase());
@@ -76,7 +73,7 @@ pub fn insert_call(call: &str) -> Result<String, String> {
 
 ///Removes a given call and returns it if it was successful.
 pub fn remove_call(call: &str) -> Result<String, String> {   
-    let list = open_callsignlist(&CALLS.to_str().unwrap());
+    let list = open_callsignlist(get_directory());
     let newcall = call.to_string().to_uppercase();
     
     if list.contains(&newcall) {
@@ -86,7 +83,7 @@ pub fn remove_call(call: &str) -> Result<String, String> {
         let mut file = OpenOptions::new()
             .write(true)
             .truncate(true)
-            .open(&CALLS.to_str().unwrap())
+            .open(get_directory())
             .expect("Can't open file");
 
         for i in newlist {
@@ -130,6 +127,14 @@ fn check_call(call:&str) -> Result<&str, String> {
     } else {
         Ok(call)
     }
+}
+
+pub fn get_directory() -> PathBuf {
+    let mut path = PathBuf::new();
+    path.push(env::home_dir().unwrap());
+
+    path.push(".dxtool/calls.csv");
+    path
 }
 
 #[cfg(test)]

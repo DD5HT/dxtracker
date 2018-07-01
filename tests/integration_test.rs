@@ -1,6 +1,13 @@
 extern crate dxtracker;
 
+//use std::path::{Path, PathBuf};
 
+/*
+#[test]
+fn check_path() {
+    assert_eq!(dxtracker::get_directory(), PathBuf::from("/home/hendrik/.dxtool/calls.csv"));
+}
+*/
 
 #[test]
 fn cluster_insert_remove() {
@@ -13,10 +20,11 @@ fn cluster_insert_remove() {
 
 #[test]
 fn open_callsign_list() {
-    let list = dxtracker::CALLS;
+    let list = dxtracker::get_directory();
 
     assert_eq!(dxtracker::open_callsignlist(list), vec!["#######"]);
 }
+
 
 /*
 #[test]
