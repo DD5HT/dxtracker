@@ -13,7 +13,7 @@ pub fn connect(cluster: &str, call: &str) {
     let _ = stream.write(&corrected_call.as_bytes());
 
     let mut reader = BufReader::new(stream);
-    let callsigns = ::open_callsignlist("calls.csv");
+    let callsigns = ::open_callsignlist(::CALLS);
     println!("Connection: Success");
     loop {
         let mut buffer = String::new(); // Create a new Buffer

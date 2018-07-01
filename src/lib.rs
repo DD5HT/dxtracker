@@ -9,6 +9,8 @@ use std::io::ErrorKind::AlreadyExists;
 
 pub mod cluster;
 
+//TODO: Replace with lazy static
+pub static CALLS: &'static str = "/home/hendrik/.dxtool/calls.csv";
 /*
 struct SPOT {
     call: String,
@@ -53,14 +55,14 @@ pub fn insert_call(call: &str) -> Result<String, String> {
     check_call(call)?;
 
     let mut new_call = String::from(call.to_uppercase());
-    let list = open_callsignlist("calls.csv");
+    let list = open_callsignlist(CALLS);
     if list.contains(&new_call) {
         return Err(format!("{} is alread in the callsign list!", new_call));
     }else {
         new_call.push_str("\n");
         let mut file = OpenOptions::new()
             .append(true)
-            .open("calls.csv")
+            .open(CALLS)
             .expect("Can't open file"); //TODO: Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
         return Ok(call.to_uppercase());
@@ -69,7 +71,7 @@ pub fn insert_call(call: &str) -> Result<String, String> {
 
 ///Removes a given call and returns it if it was successful.
 pub fn remove_call(call: &str) -> Result<String, String> {   
-    let list = open_callsignlist("calls.csv");
+    let list = open_callsignlist(CALLS);
     let newcall = call.to_string().to_uppercase();
     
     if list.contains(&newcall) {
@@ -79,7 +81,7 @@ pub fn remove_call(call: &str) -> Result<String, String> {
         let mut file = OpenOptions::new()
             .write(true)
             .truncate(true)
-            .open("calls.csv")
+            .open(CALLS)
             .expect("Can't open file");
 
         for i in newlist {
@@ -95,8 +97,8 @@ fn reset_list() -> Result<String, String> {
     unimplemented!()
 }
 //maybe result IO error?
-pub fn create_list(listname: &str) -> Result<&str, String>{
-
+pub fn create_list(listname: &str) -> Result<&str, String> {
+    //TODO: Check if list already exists and just skipp all steps here
     let mut default_path = String::from("");
     match env::home_dir() {
         Some(path) => default_path =  path.to_str().unwrap().to_string() + "/.dxtool",
@@ -111,6 +113,7 @@ pub fn create_list(listname: &str) -> Result<&str, String>{
     };
 
     let mut file = File::create(default_path + "/calls.csv").unwrap();
+        file.write(b"#######\n").unwrap();
 
     Ok("Created default folder")
 }
