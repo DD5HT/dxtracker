@@ -13,7 +13,7 @@ use std::io::ErrorKind::AlreadyExists;
 pub mod cluster;
 
 lazy_static! {
-    static ref CALLS: std::boxed::Box<std::path::PathBuf> = Box::new(env::home_dir().unwrap());
+    static ref CALLS: std::path::PathBuf = env::home_dir().unwrap();
 }    
 
 /*
