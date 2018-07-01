@@ -15,6 +15,10 @@ fn open_callsign_list() {
     assert_eq!(dxtracker::open_callsignlist(list), vec!["#######"]);
 }
 
+#[test]
+fn initializing() {
+    dxtracker::create_list("PLACEHOLDER").unwrap();
+}
 /*
 #[test]
 fn cluster_connection_test() {

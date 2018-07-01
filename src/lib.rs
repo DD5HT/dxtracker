@@ -3,7 +3,8 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
-use std::fs::OpenOptions;
+use std::fs::{OpenOptions, DirBuilder};
+use std::env;
 
 pub mod cluster;
 
@@ -93,9 +94,23 @@ fn reset_list() -> Result<String, String> {
     unimplemented!()
 }
 //maybe result IO error?
-fn create_list(listname: &str) -> Result<&str, String>{
-    unimplemented!()
+pub fn create_list(listname: &str) -> Result<&str, String>{
+
+    let mut default_path = String::from("");
+    match env::home_dir() {
+        Some(path) => default_path =  path.to_str().unwrap().to_string() + "/.dxtool",
+        None => println!("Impossible to get your home dir!"),
+    }
+    match DirBuilder::new().create(default_path.clone()){
+        Ok(_) => {},
+        Err(err) => return Err(err.to_string()),
+    };
+
+    let mut file = File::create(default_path + "/calls.csv").unwrap();
+
+    Ok("Created default folder")
 }
+
 ///Checks if call invalid
 fn check_call(call:&str) -> Result<&str, String> {
     if call.len() < 3 || call.len() > 20 {
