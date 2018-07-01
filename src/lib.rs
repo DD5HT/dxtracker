@@ -114,7 +114,7 @@ pub fn create_list(listname: &str) -> Result<&str, String> {
         },
     };
 
-    let mut file = File::create(default_path + "/calls.csv").unwrap();
+    let mut file = File::create(get_directory()).unwrap();
         file.write(b"#######\n").unwrap();
 
     Ok("Created default folder")

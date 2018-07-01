@@ -20,6 +20,7 @@ fn cluster_insert_remove() {
 
 #[test]
 fn open_callsign_list() {
+    dxtracker::create_list("PLACEHOLDER").unwrap();
     let list = dxtracker::get_directory();
 
     assert_eq!(dxtracker::open_callsignlist(list), vec!["#######"]);
