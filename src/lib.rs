@@ -1,21 +1,26 @@
 #![feature(vec_remove_item)]
 
+#[macro_use]
+extern crate lazy_static;
+
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
-use std::fs::OpenOptions;
+use std::fs::{OpenOptions, DirBuilder};
+use std::env;
+use std::io::ErrorKind::AlreadyExists;
+use std::path::{Path, PathBuf};
 
 pub mod cluster;
 
+/*
 struct SPOT {
     call: String,
     freq: f64,
     mode: String,
     spotter: String,
 }
-
-//TODO: write TEST for function
-//Maybe return vector instead of String?
+*/
 ///Takes a formated dxcluster str vector and the list of all callsigns
 ///looks if callsign from spotted cluster is in list
 pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Option<String>{
@@ -33,8 +38,8 @@ pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Opti
     }
 }
 
-///opens a list 
-pub fn open_callsignlist(list: &str) -> Vec<String> {
+///Opens the given list file and return a Vector with all the Callsigns
+pub fn open_callsignlist(list: PathBuf) -> Vec<String> {
     let file = BufReader::new(File::open(list).expect("ERROR reading file"));
     let mut calls: Vec<String> = Vec::new(); 
     for line in file.lines() {
@@ -43,75 +48,93 @@ pub fn open_callsignlist(list: &str) -> Vec<String> {
             Err(e) => println!("Ups: {}",e ),
         }
     }
-    println!("Loaded the following calls: {:?}", calls );
     calls
 }
 
-///Inserts a call into the Callsign csv list
-/// ´´´
-/// let call = "TESTCALL";
-/// assert_eq!(insert_call(call),Ok(call));
-/// ´´´
-pub fn insert_call(call: &str) -> Result<&str, String> {
+///Inserts a call into the Callsign csv list returns the call if it was successful.
+pub fn insert_call(call: &str) -> Result<String, String> {
     
     check_call(call)?;
 
-    let mut new_call = String::from(call);
-    let list = open_callsignlist("calls.csv");
+    let mut new_call = String::from(call.to_uppercase());
+    let list = open_callsignlist(get_directory());
     if list.contains(&new_call) {
-        println!("{} is already in callsign list!", new_call );
-        return Err(format!("{} is alread in callsign list!", new_call));
-    }
-    else {
-        println!("Inserting: {}", new_call );
+        return Err(format!("{} is alread in the callsign list!", new_call));
+    }else {
         new_call.push_str("\n");
         let mut file = OpenOptions::new()
             .append(true)
-            .open("calls.csv")
+            .open(get_directory())
             .expect("Can't open file"); //TODO: Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
-        return Ok(call);
+        return Ok(call.to_uppercase());
     }
 }
 
 ///Removes a given call and returns it if it was successful.
-pub fn remove_call(call: &str) -> Result<&str, &str> {
+pub fn remove_call(call: &str) -> Result<String, String> {   
+    let list = open_callsignlist(get_directory());
+    let newcall = call.to_string().to_uppercase();
     
-    let list = open_callsignlist("calls.csv");
-    let newcall = call.to_string();
     if list.contains(&newcall) {
-        println!("Removing: {}",newcall);
         let mut newlist = list.clone();
         newlist.remove_item(&newcall).unwrap();
 
         let mut file = OpenOptions::new()
             .write(true)
             .truncate(true)
-            .open("calls.csv")
+            .open(get_directory())
             .expect("Can't open file");
 
         for i in newlist {
             let content = i + "\n";
             file.write(content.as_bytes()).unwrap();
         }
-        return Ok(call);
-
+        return Ok(call.to_uppercase());
     }
-    Err("Can't remove Callsign!")
+    Err("Can not remove the callsign!".to_string())
 }
 
-fn reset_list() {
-    unimplemented!();
+fn reset_list() -> Result<String, String> {
+    unimplemented!()
+}
+//maybe result IO error?
+pub fn create_list(listname: &str) -> Result<&str, String> {
+    //TODO: Check if list already exists and just skipp all steps here
+    let mut default_path = String::from("");
+    match env::home_dir() {
+        Some(path) => default_path =  path.to_str().unwrap().to_string() + "/.dxtool",
+        None => println!("Impossible to get your home dir!"),
+    }
+    match DirBuilder::new().create(default_path.clone()){
+        Ok(_) => {},
+        Err(err) => match err.kind() {
+            AlreadyExists => println!("File Already exists, skipping!"),
+            _ => return Err(err.to_string()),
+        },
+    };
+
+    let mut file = File::create(get_directory()).unwrap();
+        file.write(b"#######\n").unwrap();
+
+    Ok("Created default folder")
 }
 
 ///Checks if call invalid
 fn check_call(call:&str) -> Result<&str, String> {
     if call.len() < 3 || call.len() > 20 {
         return Err(String::from("Invalid call format!"));
-    }
-    else {
+    } else {
         Ok(call)
     }
+}
+
+pub fn get_directory() -> PathBuf {
+    let mut path = PathBuf::new();
+    path.push(env::home_dir().unwrap());
+
+    path.push(".dxtool/calls.csv");
+    path
 }
 
 #[cfg(test)]
