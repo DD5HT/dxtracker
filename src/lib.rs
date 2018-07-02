@@ -1,15 +1,12 @@
 #![feature(vec_remove_item)]
 
-#[macro_use]
-extern crate lazy_static;
-
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::{OpenOptions, DirBuilder};
 use std::env;
 use std::io::ErrorKind::AlreadyExists;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 pub mod cluster;
 
