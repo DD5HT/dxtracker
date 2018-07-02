@@ -95,7 +95,8 @@ pub fn remove_call(call: &str) -> Result<String, String> {
 fn reset_list() -> Result<String, String> {
     unimplemented!()
 }
-//maybe result IO error?
+
+///Takes a name and creates that file.
 pub fn create_list(listname: &str) -> Result<&str, String> {
     //TODO: Check if list already exists and just skipp all steps here
     let mut default_path = String::from("");
@@ -125,7 +126,7 @@ fn check_call(call:&str) -> Result<&str, String> {
         Ok(call)
     }
 }
-
+///Returns the PathBuf for the default Path
 pub fn get_directory() -> PathBuf {
     let mut path = PathBuf::new();
     path.push(env::home_dir().unwrap());

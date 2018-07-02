@@ -3,7 +3,7 @@ use std::io::BufReader;
 use std::io::prelude::{BufRead, Write};
 
 /// Starts the DX Cluster and connects to it via the given cluster address and call
-/// It repeatedly clals the get_callsign function with the filtered buffer
+/// It repeatedly callss the get_callsign function with the filtered buffer
 /// entries
 pub fn connect(cluster: &str, call: &str) {
     //Connect to dx-cluster server
