@@ -20,6 +20,14 @@ struct SPOT {
 */
 ///Takes a formated dxcluster str vector and the list of all callsigns
 ///looks if callsign from spotted cluster is in list
+/// # Example:
+/// ```
+///use dxtracker::get_callsign;
+///
+///let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
+///let searchlist: Vec<String> = vec![String::from("IK3VUU")];
+///assert_eq!(get_callsign(&entry, searchlist).is_some(), true);
+/// ```
 pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Option<String>{
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
@@ -133,28 +141,4 @@ pub fn get_directory() -> PathBuf {
 
     path.push(".dxtool/calls.csv");
     path
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn get_callsign_found() {
-        let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
-        let searchlist: Vec<String> = vec![String::from("IK3VUU")];
-        assert_eq!(get_callsign(&entry, searchlist).is_some(), true);
-    }
-    
-    #[test]
-    fn get_callsign_not_found() {
-        let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
-        let searchlist: Vec<String> = vec![String::from("NOCALL")];
-        assert_eq!(get_callsign(&entry, searchlist).is_none(), true);
-    }
-    /*
-    #[test]
-    fn open_callsignlist_test() {
-    }
-    */
 }
