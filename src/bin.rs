@@ -1,3 +1,6 @@
+//!This is the command line client for the dxtracker
+//! use dxtool -h for help
+//! 
 extern crate dxtracker;
 extern crate clap;
 
