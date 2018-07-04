@@ -1,12 +1,9 @@
 #![feature(vec_remove_item)]
 
-<<<<<<< HEAD
-=======
 extern crate toml;
 #[macro_use]
 extern crate serde_derive;
 
->>>>>>> 06ad91621d2ab6811e57b4a422b78c1ded269a6d
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
