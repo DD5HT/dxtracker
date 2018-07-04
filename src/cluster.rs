@@ -2,6 +2,7 @@ use std::net::TcpStream;
 use std::io::BufReader;
 use std::io::prelude::{BufRead, Write};
 
+#[derive(Debug, Deserialize)]
 pub struct Cluster<'a, 'b> {
     server: &'a str,
     call: &'b str,

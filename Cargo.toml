@@ -6,9 +6,12 @@ autobins = false
 
 [dependencies]
 clap = "*"
+toml = "*"
+serde = "*"
+serde_derive = "*"
 
 [profile.release]
-lto = true
+lto = false
 
 [lib]
 name = "dxtracker"
