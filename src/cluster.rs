@@ -2,14 +2,24 @@ use std::net::TcpStream;
 use std::io::BufReader;
 use std::io::prelude::{BufRead, Write};
 
+pub struct Cluster<'a, 'b> {
+    server: &'a str,
+    call: &'b str,
+}
+
+impl<'a, 'b> Cluster<'a, 'b>{
+    pub fn new (server: &'a str, call: &'b str) -> Cluster <'a, 'b>{
+        Cluster {server: server, call: call}
+    }
+}
 /// Starts the DX Cluster and connects to it via the given cluster address and call
 /// It repeatedly callss the get_callsign function with the filtered buffer
 /// entries
-pub fn connect(cluster: &str, call: &str) {
+pub fn connect(cluster: Cluster) {
     //Connect to dx-cluster server
-    let mut stream = TcpStream::connect(cluster).expect("Can't connect to Cluster");
+    let mut stream = TcpStream::connect(cluster.server).expect("Can't connect to Cluster");
     //Write callsign to telnet server to start getting cluster messages.
-    let corrected_call = call.to_owned() + "\n";
+    let corrected_call = cluster.call.to_owned() + "\n";
     let _ = stream.write(&corrected_call.as_bytes());
 
     let mut reader = BufReader::new(stream);
