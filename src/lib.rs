@@ -1,5 +1,12 @@
 #![feature(vec_remove_item)]
 
+<<<<<<< HEAD
+=======
+extern crate toml;
+#[macro_use]
+extern crate serde_derive;
+
+>>>>>>> 06ad91621d2ab6811e57b4a422b78c1ded269a6d
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
@@ -20,6 +27,14 @@ struct SPOT {
 */
 ///Takes a formated dxcluster str vector and the list of all callsigns
 ///looks if callsign from spotted cluster is in list
+/// # Example:
+/// ```
+///use dxtracker::get_callsign;
+///
+///let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
+///let searchlist: Vec<String> = vec![String::from("IK3VUU")];
+///assert_eq!(get_callsign(&entry, searchlist).is_some(), true);
+/// ```
 pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Option<String>{
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
@@ -95,7 +110,8 @@ pub fn remove_call(call: &str) -> Result<String, String> {
 fn reset_list() -> Result<String, String> {
     unimplemented!()
 }
-//maybe result IO error?
+
+///Takes a name and creates that file.
 pub fn create_list(listname: &str) -> Result<&str, String> {
     //TODO: Check if list already exists and just skipp all steps here
     let mut default_path = String::from("");
@@ -125,34 +141,10 @@ fn check_call(call:&str) -> Result<&str, String> {
         Ok(call)
     }
 }
-
+///Returns the PathBuf for the default Path
 pub fn get_directory() -> PathBuf {
     let mut path = PathBuf::new();
     path.push(env::home_dir().unwrap());
     path.push(".dxtool/calls.csv");
     path
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn get_callsign_found() {
-        let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
-        let searchlist: Vec<String> = vec![String::from("IK3VUU")];
-        assert_eq!(get_callsign(&entry, searchlist).is_some(), true);
-    }
-    
-    #[test]
-    fn get_callsign_not_found() {
-        let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
-        let searchlist: Vec<String> = vec![String::from("NOCALL")];
-        assert_eq!(get_callsign(&entry, searchlist).is_none(), true);
-    }
-    /*
-    #[test]
-    fn open_callsignlist_test() {
-    }
-    */
 }

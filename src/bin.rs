@@ -1,7 +1,10 @@
+//!This is the command line client for the dxtracker
+//! use dxtool -h for help
+//! 
 extern crate dxtracker;
 extern crate clap;
 
-use dxtracker::cluster;
+use dxtracker::cluster::*;
 use clap::{Arg, App};
 
 fn main() {
@@ -38,7 +41,7 @@ fn main() {
         let call = "DD5HT";
         let cluster = "cluster.dl9gtb.de:8000";
         println!("Connecting to {} with callsign: {} ...", cluster.to_uppercase(), call);
-        cluster::connect(cluster, call);
+        connect(Cluster::new(cluster, call));
         println!("{}","jo" );
     }
    

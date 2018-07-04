@@ -5,11 +5,13 @@ authors = ["hendrik@dd5ht.de"]
 autobins = false
 
 [dependencies]
-lazy_static = "1.0"
 clap = "*"
+toml = "*"
+serde = "*"
+serde_derive = "*"
 
 [profile.release]
-lto = true
+lto = false
 
 [lib]
 name = "dxtracker"
