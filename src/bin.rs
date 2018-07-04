@@ -29,7 +29,7 @@ fn main() {
                                .short("r")
                                .long("remove")
                                .value_name("CALL")
-                               .help("Remove a callsign for the list")
+                               .help("Removes a callsign from the list")
                                .takes_value(true))
                           .get_matches();
 
@@ -47,7 +47,7 @@ fn main() {
 
     if let Some(call) = matches.value_of("ADD") {
         match dxtracker::insert_call(call){
-            Ok(i) => println!("Added {} to callsign list.", i),
+            Ok(i) => println!("Added {} to the callsign list.", i),
             Err(e) => println!("{}",e),
         }
     };
