@@ -142,7 +142,6 @@ fn check_call(call:&str) -> Result<&str, String> {
 pub fn get_directory() -> PathBuf {
     let mut path = PathBuf::new();
     path.push(env::home_dir().unwrap());
-
     path.push(".dxtool/calls.csv");
     path
 }
