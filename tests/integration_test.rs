@@ -26,7 +26,13 @@ fn open_callsign_list() {
     assert_eq!(dxtracker::open_callsignlist(list), vec!["#######"]);
 }
 
+#[test]
+fn load_config_test() {
+    use dxtracker::cluster::Cluster;
 
+    let pre = Cluster::new("cluster.dl9gtb.de:8000", "DD5HT");
+    assert_eq!(Cluster::load_config(), Some(pre) );
+}
 /*
 #[test]
 fn cluster_connection_test() {

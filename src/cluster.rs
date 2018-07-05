@@ -1,8 +1,9 @@
 use std::net::TcpStream;
 use std::io::BufReader;
 use std::io::prelude::{BufRead, Write};
+use toml;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct Cluster<'a, 'b> {
     server: &'a str,
     callsign: &'b str,
@@ -12,7 +13,23 @@ impl<'a, 'b> Cluster<'a, 'b>{
     pub fn new (server: &'a str, call: &'b str) -> Cluster <'a, 'b>{
         Cluster {server: server, callsign: call}
     }
+    pub fn load_config() -> Option <Cluster <'a, 'b>>{
+        //let config_location = "config.toml";
+        let config = r#"
+            server = "cluster.dl9gtb.de:8000"
+            callsign = "DD5HT"
+        "#;
+
+        let loaded: Option<Cluster> = match toml::from_str(config){
+            Ok(n) => Some(n),
+            Err(e) => None,
+        };
+
+        loaded
+    }
 }
+
+
 /// Starts the DX Cluster and connects to it via the given cluster address and call
 /// It repeatedly callss the get_callsign function with the filtered buffer
 /// entries
