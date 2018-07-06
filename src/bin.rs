@@ -1,6 +1,5 @@
 //!This is the command line client for the dxtracker
 //! use dxtool -h for help
-//! 
 extern crate dxtracker;
 extern crate clap;
 
@@ -36,13 +35,9 @@ fn main() {
                                .takes_value(true))
                           .get_matches();
 
-
     if matches.is_present("START") {
-        let call = "DD5HT";
-        let cluster = "cluster.dl9gtb.de:8000";
-        println!("Connecting to {} with callsign: {} ...", cluster.to_uppercase(), call);
-        connect(Cluster::new(cluster, call));
-        println!("{}","jo" );
+        let cluster = Cluster::load_config();
+        connect(cluster.unwrap()); //TODO: remove unwrap
     }
    
     //let config = matches.value_of("config").unwrap_or("default.conf");

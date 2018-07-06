@@ -14,14 +14,6 @@ use std::path::PathBuf;
 
 pub mod cluster;
 
-/*
-struct SPOT {
-    call: String,
-    freq: f64,
-    mode: String,
-    spotter: String,
-}
-*/
 ///Takes a formated dxcluster str vector and the list of all callsigns
 ///looks if callsign from spotted cluster is in list
 /// # Example:
