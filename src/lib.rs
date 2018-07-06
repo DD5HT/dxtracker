@@ -115,7 +115,6 @@ pub fn create_list() -> Result<&'static str, String> {
 
     Ok("Created default folder")
 }
-//FIXME: ERROR HANDLING
 pub fn dir_build() -> Result<&'static str, String> {
    match DirBuilder::new().create(get_home_path()) {
         Ok(_)    => Ok("Created default folder"),
