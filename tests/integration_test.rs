@@ -11,7 +11,7 @@ fn check_path() {
 
 #[test]
 fn cluster_insert_remove() {
-    dxtracker::create_list("PLACEHOLDER").unwrap();
+    dxtracker::create_list().unwrap();
     let call = "TeStCaLl";
     let formated_call = call.to_uppercase(); //TODO: add assert for exists
     assert_eq!(dxtracker::insert_call(call), Ok(formated_call.clone()));
@@ -20,7 +20,7 @@ fn cluster_insert_remove() {
 
 #[test]
 fn open_callsign_list() {
-    dxtracker::create_list("PLACEHOLDER").unwrap();
+    dxtracker::create_list().unwrap();
     let list = dxtracker::get_directory();
 
     assert_eq!(dxtracker::open_callsignlist(list), vec!["#######"]);

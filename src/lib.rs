@@ -108,9 +108,8 @@ fn reset_list() -> Result<String, String> {
     unimplemented!()
 }
 
-///Takes a name and creates that file.
-pub fn create_list(listname: &str) -> Result<&str, String> {
-    //TODO: Check if list already exists and just skipp all steps here
+///Creates the callsign list at the default location: ~/.dxtool/calls.csv 
+pub fn create_list() -> Result<&'static str, String> {
     let mut default_path = String::from("");
     match env::home_dir() {
         Some(path) => default_path =  path.to_str().unwrap().to_string() + "/.dxtool",
@@ -123,7 +122,7 @@ pub fn create_list(listname: &str) -> Result<&str, String> {
             _ => return Err(err.to_string()),
         },
     };
-
+    //TODO: Maybe remove overide?
     let mut file = File::create(get_directory()).unwrap();
         file.write(b"#######\n").unwrap();
 

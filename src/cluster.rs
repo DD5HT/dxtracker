@@ -22,7 +22,7 @@ impl<'a, 'b> Cluster<'a, 'b>{
 
         let loaded: Option<Cluster> = match toml::from_str(config){
             Ok(n) => Some(n),
-            Err(e) => None,
+            Err(_) => None,
         };
 
         loaded
