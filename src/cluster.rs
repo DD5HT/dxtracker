@@ -20,7 +20,7 @@ impl<'a, 'b> Cluster<'a, 'b>{
             callsign = "DD5HT"
         "#;
 
-        let loaded: Option<Cluster> = match toml::from_str(config){
+        let loaded = match toml::from_str(config){
             Ok(n) => Some(n),
             Err(_) => None,
         };
