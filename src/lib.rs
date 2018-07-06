@@ -58,14 +58,14 @@ pub fn insert_call(call: &str) -> Result<String, String> {
     check_call(call)?;
 
     let mut new_call = String::from(call.to_uppercase());
-    let list = open_callsignlist(get_directory());
+    let list = open_callsignlist(get_call_path());
     if list.contains(&new_call) {
         return Err(format!("{} is alread in the callsign list!", new_call));
     }else {
         new_call.push_str("\n");
         let mut file = OpenOptions::new()
             .append(true)
-            .open(get_directory())
+            .open(get_call_path())
             .expect("Can't open file"); //TODO: Add better error Handling here
         file.write_all(new_call.as_bytes()).expect("Cant write to file");
         return Ok(call.to_uppercase());
@@ -74,7 +74,7 @@ pub fn insert_call(call: &str) -> Result<String, String> {
 
 ///Removes a given call and returns it if it was successful.
 pub fn remove_call(call: &str) -> Result<String, String> {   
-    let list = open_callsignlist(get_directory());
+    let list = open_callsignlist(get_call_path());
     let newcall = call.to_string().to_uppercase();
     
     if list.contains(&newcall) {
@@ -84,7 +84,7 @@ pub fn remove_call(call: &str) -> Result<String, String> {
         let mut file = OpenOptions::new()
             .write(true)
             .truncate(true)
-            .open(get_directory())
+            .open(get_call_path())
             .expect("Can't open file");
 
         for i in newlist {
@@ -115,10 +115,13 @@ pub fn create_list() -> Result<&'static str, String> {
         },
     };
     //TODO: Maybe remove overide?
-    let mut file = File::create(get_directory()).unwrap();
+    let mut file = File::create(get_call_path()).unwrap();
         file.write(b"#######\n").unwrap();
 
     Ok("Created default folder")
+}
+pub fn dir_build() {
+    unimplemented!()
 }
 
 ///Checks if call invalid
@@ -130,9 +133,21 @@ fn check_call(call:&str) -> Result<&str, String> {
     }
 }
 ///Returns the PathBuf for the default Path
-pub fn get_directory() -> PathBuf {
+fn get_home_path() -> PathBuf {
     let mut path = PathBuf::new();
     path.push(env::home_dir().unwrap());
-    path.push(".dxtool/calls.csv");
+    path.push(".dxtool/");
+    path
+}
+
+pub fn get_call_path() -> PathBuf {
+    let mut path = get_home_path();
+    path.push("calls.csv");
+    path
+}
+
+pub fn get_config_path() -> PathBuf {
+    let mut path = get_home_path();
+    path.push("config.toml");
     path
 }

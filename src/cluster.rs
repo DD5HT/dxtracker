@@ -4,7 +4,7 @@ use std::io::prelude::{BufRead, Write};
 use std::fs::File;
 use toml;
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct Cluster {
     server: String,
     callsign: String,
@@ -16,7 +16,7 @@ impl Cluster{
     }
 
     pub fn load_config() -> Option <Cluster> {
-        let config_location = "config.toml";
+        let config_location = ::get_config_path();
         let mut config: String = String::from("");
 
         let file = BufReader::new(File::open(config_location).expect("ERROR reading file")); 
@@ -34,6 +34,16 @@ impl Cluster{
 
         loaded
     }
+    //TODO: Propper Error handeling!
+    ///Inititalized the config
+    pub fn init_config(&self) -> Result<String, String> {
+        let serial_cluster = toml::to_string_pretty(&self).unwrap();
+
+        let mut file = File::create(::get_config_path()).expect("Can't create file");
+        file.write(serial_cluster.as_bytes()).unwrap();
+
+        Ok("YOLO".to_owned())
+    }
 }
 
 
@@ -48,7 +58,7 @@ pub fn connect(cluster: Cluster) {
     let _ = stream.write(&corrected_call.as_bytes());
 
     let mut reader = BufReader::new(stream);
-    let callsigns = ::open_callsignlist(::get_directory());
+    let callsigns = ::open_callsignlist(::get_call_path());
     println!("Connection: Success");
     loop {
         let mut buffer = String::new(); // Create a new Buffer
