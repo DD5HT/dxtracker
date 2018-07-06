@@ -4,16 +4,16 @@ use std::io::prelude::{BufRead, Write};
 use toml;
 
 #[derive(Debug, Deserialize, PartialEq)]
-pub struct Cluster<'a, 'b> {
-    server: &'a str,
-    callsign: &'b str,
+pub struct Cluster {
+    server: String,
+    callsign: String,
 }
 
-impl<'a, 'b> Cluster<'a, 'b>{
-    pub fn new (server: &'a str, call: &'b str) -> Cluster <'a, 'b>{
-        Cluster {server: server, callsign: call}
+impl Cluster{
+    pub fn new (server: &str, call: &str) -> Cluster {
+        Cluster {server: String::from(server), callsign: String::from(call)}
     }
-    pub fn load_config() -> Option <Cluster <'a, 'b>>{
+    pub fn load_config() -> Option <Cluster>{
         //let config_location = "config.toml";
         let config = r#"
             server = "cluster.dl9gtb.de:8000"
