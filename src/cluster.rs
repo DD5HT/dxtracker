@@ -1,6 +1,7 @@
 use std::net::TcpStream;
 use std::io::BufReader;
 use std::io::prelude::{BufRead, Write};
+use std::fs::File;
 use toml;
 
 #[derive(Debug, Deserialize, PartialEq)]
@@ -14,13 +15,18 @@ impl Cluster{
         Cluster {server: String::from(server), callsign: String::from(call)}
     }
     pub fn load_config() -> Option <Cluster>{
-        //let config_location = "config.toml";
-        let config = r#"
+        let config_location = "config.toml";
+        /*let config = r#"
             server = "cluster.dl9gtb.de:8000"
             callsign = "DD5HT"
-        "#;
+        "#;*/
+        let mut config: String = String::from("");
+        let file = BufReader::new(File::open(config_location).expect("ERROR reading file")); 
+        for line in file.lines() {
+            config.push_str(line.unwrap().as_ref());
+        };
 
-        let loaded = match toml::from_str(config){
+        let loaded = match toml::from_str(&config){
             Ok(n) => Some(n),
             Err(_) => None,
         };

@@ -1,3 +1,2 @@
-#Config File for the dxcluster
 server = "cluster.dl9gtb.de:8000"
 callsign = "DD5HT"
