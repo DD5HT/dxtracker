@@ -6,6 +6,7 @@ extern crate clap;
 use dxtracker::cluster::*;
 use clap::{Arg, App};
 
+//TODO ADD CONFIG dxtool -c --call DD5HT --server DXCLUSTER ?
 fn main() {
     let matches = App::new("DX Tool")
                           .version("0.1")
@@ -15,6 +16,10 @@ fn main() {
                                .short("s")
                                .long("start")
                                .help("Starts the DXTOOL"))
+                          .arg(Arg::with_name("LIST")
+                               .short("l")
+                               .long("list")
+                               .help("Shows you all callsigns contained in the list"))
                           .arg(Arg::with_name("config")
                                .short("c")
                                .long("config")
@@ -35,11 +40,19 @@ fn main() {
                                .takes_value(true))
                           .get_matches();
 
+    if matches.is_present("LIST") {
+        println!("Following callsigns are in the list: ");
+        //TODO: Create pretty callsign print list;
+        for i in dxtracker::open_callsignlist(dxtracker::get_call_path()){
+            println!("{}",i )
+        };
+    }
+    
     if matches.is_present("START") {
         let cluster = Cluster::load_config();
         connect(cluster.unwrap()); //TODO: remove unwrap
     }
-   
+
     //let config = matches.value_of("config").unwrap_or("default.conf");
     //println!("Value for config: {}", config);
 
