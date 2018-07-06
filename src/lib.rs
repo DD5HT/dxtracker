@@ -102,12 +102,7 @@ fn reset_list() -> Result<String, String> {
 
 ///Creates the callsign list at the default location: ~/.dxtool/calls.csv 
 pub fn create_list() -> Result<&'static str, String> {
-    let mut default_path = String::from("");
-    match env::home_dir() {
-        Some(path) => default_path =  path.to_str().unwrap().to_string() + "/.dxtool",
-        None => println!("Impossible to get your home dir!"),
-    }
-    match DirBuilder::new().create(default_path.clone()){
+    match DirBuilder::new().create(get_home_path()){
         Ok(_) => {},
         Err(err) => match err.kind() {
             AlreadyExists => println!("File Already exists, skipping!"),
@@ -120,8 +115,15 @@ pub fn create_list() -> Result<&'static str, String> {
 
     Ok("Created default folder")
 }
-pub fn dir_build() {
-    unimplemented!()
+//FIXME: ERROR HANDLING
+pub fn dir_build() -> Result<&'static str, String> {
+   match DirBuilder::new().create(get_home_path()) {
+        Ok(_)    => Ok("Created default folder"),
+        Err(err) => match err.kind() {
+            AlreadyExists => Ok("File Already exists, skipping!"),
+                        _ => Err(err.to_string()),
+        },
+    }
 }
 
 ///Checks if call invalid
