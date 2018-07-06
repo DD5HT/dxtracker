@@ -96,10 +96,6 @@ pub fn remove_call(call: &str) -> Result<String, String> {
     Err("Can not remove the callsign!".to_string())
 }
 
-fn reset_list() -> Result<String, String> {
-    unimplemented!()
-}
-
 ///Creates the callsign list at the default location: ~/.dxtool/calls.csv 
 pub fn create_list() -> Result<&'static str, String> {
     match DirBuilder::new().create(get_home_path()){
