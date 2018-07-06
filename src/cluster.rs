@@ -23,7 +23,7 @@ impl Cluster{
         let mut config: String = String::from("");
         let file = BufReader::new(File::open(config_location).expect("ERROR reading file")); 
         for line in file.lines() {
-            config.push_str(line.unwrap().as_ref());
+            config.push_str(line.unwrap().as_ref());//FIXME:
         };
 
         let loaded = match toml::from_str(&config){
