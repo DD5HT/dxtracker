@@ -5,22 +5,62 @@ rust:
 - stable
 - beta
 - nightly
-cache: cargo
+cache: 
+- apt
 matrix:
-  allow_failures:
-  - rust: stable
-  - rust: beta
-  fast_finish: true
+  include:
+    - env:
+        - TARGET=arm-unknown-linux-gnueabihf
+        - LINKER=arm-linux-gnueabihf-gcc
+        - PACKAGE=unipager-rpi2.tar.gz
+      addons:
+        apt:
+          packages: &armhf
+            - gcc-arm-linux-gnueabihf
+            - libc6-armhf-cross
+            - libc6-dev-armhf-cross
+    - env:
+        - TARGET=armv7-unknown-linux-gnueabihf
+        - LINKER=arm-linux-gnueabihf-gcc
+        - PACKAGE=unipager-rpi3.tar.gz
+      addons:
+        apt:
+          packages: *armhf
+    - env:
+        - TARGET=i686-unknown-linux-gnu
+        - PACKAGE=unipager-i686.tar.gz
+      addons:
+        apt:
+          packages:
+            - gcc-multilib
+    - env:
+        - TARGET=x86_64-unknown-linux-gnu
+        - PACKAGE=unipager-x86_64.tar.gz
+
+install:
+  - export PATH="$PATH:$HOME/.cargo/bin"
+  - rustup target add $TARGET || true
+  - |
+    if [ -n "$LINKER" ]; then
+      mkdir -p ~/.cargo
+      echo >> ~/.cargo/config
+      echo "[target.$TARGET]" >> ~/.cargo/config
+      echo "linker = \"$LINKER\"" >> ~/.cargo/config
+    fi
+
 script:
-  - cargo test --verbose
-  - cargo build --release
+  - cargo test 
+  - cargo build --target $TARGET --verbose --release
+
 before_deploy:
-  - tar -czf dxtool.tar.gz -C target/release/ dxtool
+  - tar -czf $PACKAGE -C target/$TARGET/release/ dxtool
+
+deploy:
 deploy:
   provider: releases
   api_key:
     secure: rV9aGx6vl566w+/kx4gHP2JI/Lk3+JF1hEO/s0nX5alZdUK0dkV9RetJj2f7ETynzg0ZHkzyBNq21n/kFYrOA7KcCiEEBCH2zq1s2jHccpYn6YARm/RrP6I5kdsqyBEFS/83Mdl4JxTKhuDh1hROCJwYQCupxc2mL/H0+OzQUDXcSFJcFoMBRZorHrc3NKmvANEeA01isGPtfmyp8/Hq9qZl5ZY26v5zAqHR0+rdXPwA8UYa0jPJ01iaTQAfoZatd/dzK8zc5hVG6KW7zXE3z+hhhU8s4bYWuGMa8LppKHQnZRaN2haiqTIuOdOyXsh6kNrcz6HkFDiQIJiOXvFPL3+qotFxidV5XPnoeIXpNMdAIYZC4Ri8BXM9TS0ioozh+MbYbTw5wjqOioryEFJ8RExn14xmqgvPgrSmA6rri4NeCDQ7hZA6SebjEaKuTKhX8MJ6rB/LN4/qke1bihgPQpsnplIHDndkXnccY4jXrzo/YIKBTj6prNUS0X8PNf5OB81+xJ4o1HrPIJKbyDS0QCLP3lx6iuG4Ct5NrS+szsj2RUSYhifNIhABkIkoCB9uChVSvXJT5hB/S2wM/DH4daNIylcT7LFxIihUQw7bvMQmhcds7LgmOPWPkzV0jyryNEGBaXQniujGfu5PyTrFohFBy4XEc8bzYagNhSF14d8=
-  file: dxtool.tar.gz
+  file: ${PACKAGE}
   on:
     tags: true
     repo: DD5HT/dxtracker
