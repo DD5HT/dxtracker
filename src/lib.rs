@@ -98,24 +98,18 @@ pub fn remove_call(call: &str) -> Result<String, String> {
 
 ///Creates the callsign list at the default location: ~/.dxtool/calls.csv 
 pub fn create_list() -> Result<&'static str, String> {
-    match DirBuilder::new().create(get_home_path()){
-        Ok(_) => {},
-        Err(err) => match err.kind() {
-            AlreadyExists => println!("File Already exists, skipping!"),
-            _ => return Err(err.to_string()),
-        },
-    };
     //TODO: Maybe remove overide?
     let mut file = File::create(get_call_path()).unwrap();
         file.write(b"#######\n").unwrap();
 
-    Ok("Created default folder")
+    Ok("Created calls.csv")
 }
-pub fn dir_build() -> Result<&'static str, String> {
+///Creates a the directory
+pub fn dir_build() -> Result<String, String> {
    match DirBuilder::new().create(get_home_path()) {
-        Ok(_)    => Ok("Created default folder"),
+        Ok(_)    => Ok(get_home_path().to_str().unwrap().to_owned()),
         Err(err) => match err.kind() {
-            AlreadyExists => Ok("File Already exists, skipping!"),
+            AlreadyExists => Ok(get_home_path().to_str().unwrap().to_owned()),
                         _ => Err(err.to_string()),
         },
     }
