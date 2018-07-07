@@ -9,9 +9,9 @@ use clap::{Arg, App};
 //TODO ADD CONFIG dxtool -c --call DD5HT --server DXCLUSTER ?
 fn main() {
     let matches = App::new("DX Tool")
-                          .version("0.1")
+                          .version("0.1 Alpha")
                           .author("Hendrik, DD5HT, <hendrik@dd5ht.de>")
-                          .about("Connects to the dxcluster an reports filtered calls")
+                          .about("Connects to the DX Cluster via telnet and and filters it via a custom list")
                           .arg(Arg::with_name("START")
                                .short("s")
                                .long("start")
@@ -70,4 +70,8 @@ fn main() {
         }
     };
 
+    // TODO: ADD INIT for first bootup? 
+    //Set default server and callsign
+    // Create Folder, Create Callsign list, Create default config?
+    // Read in Config
 }
