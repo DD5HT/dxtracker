@@ -51,7 +51,7 @@ script:
   - cargo build --target $TARGET --verbose --release
 
 before_deploy:
-  - tar -czf $PACKAGE -C target/$TARGET/release/ dxtool
+  - tar -czf $PACKAGE -C target/$TARGET/release/ dxtracker
 
 deploy:
 deploy:
@@ -59,7 +59,7 @@ deploy:
   api_key:
     secure: rV9aGx6vl566w+/kx4gHP2JI/Lk3+JF1hEO/s0nX5alZdUK0dkV9RetJj2f7ETynzg0ZHkzyBNq21n/kFYrOA7KcCiEEBCH2zq1s2jHccpYn6YARm/RrP6I5kdsqyBEFS/83Mdl4JxTKhuDh1hROCJwYQCupxc2mL/H0+OzQUDXcSFJcFoMBRZorHrc3NKmvANEeA01isGPtfmyp8/Hq9qZl5ZY26v5zAqHR0+rdXPwA8UYa0jPJ01iaTQAfoZatd/dzK8zc5hVG6KW7zXE3z+hhhU8s4bYWuGMa8LppKHQnZRaN2haiqTIuOdOyXsh6kNrcz6HkFDiQIJiOXvFPL3+qotFxidV5XPnoeIXpNMdAIYZC4Ri8BXM9TS0ioozh+MbYbTw5wjqOioryEFJ8RExn14xmqgvPgrSmA6rri4NeCDQ7hZA6SebjEaKuTKhX8MJ6rB/LN4/qke1bihgPQpsnplIHDndkXnccY4jXrzo/YIKBTj6prNUS0X8PNf5OB81+xJ4o1HrPIJKbyDS0QCLP3lx6iuG4Ct5NrS+szsj2RUSYhifNIhABkIkoCB9uChVSvXJT5hB/S2wM/DH4daNIylcT7LFxIihUQw7bvMQmhcds7LgmOPWPkzV0jyryNEGBaXQniujGfu5PyTrFohFBy4XEc8bzYagNhSF14d8=
   file: ${PACKAGE}
+  skip_cleanup: true
   on:
     tags: true
     repo: DD5HT/dxtracker
-    branch: dev
