@@ -27,8 +27,11 @@ fn load_config() {
 
 // Helper functions
 
+///Wrapper function for system specific test 
+/// FIXME: system unspecific
 fn create_directory() {
-    assert_eq!(dxtracker::dir_build(), Ok("/home/hendrik/.dxtool/".to_owned()));
+    dxtracker::dir_build().unwrap();
+    //assert_eq!(dxtracker::dir_build(), Ok("/home/hendrik/.dxtool/".to_owned()));
 }
 
 fn open_callsign_list() {
@@ -42,7 +45,7 @@ fn open_callsign_list() {
 
 fn create_config() {
     use dxtracker::cluster::Cluster;
-    dxtracker::dir_build().expect("Can't create directory!");
+    create_directory();
 
     let pre = Cluster::new("cluster.dl9gtb.de:8000", "DD5HT").init_config();
     assert_eq!(pre, Ok("YOLO".to_owned()));
