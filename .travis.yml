@@ -10,7 +10,7 @@ matrix:
     - env:
         - TARGET=arm-unknown-linux-gnueabihf
         - LINKER=arm-linux-gnueabihf-gcc
-        - PACKAGE=unipager-rpi2.tar.gz
+        - PACKAGE=dxtracker-rpi2.tar.gz
       addons:
         apt:
           packages: &armhf
@@ -20,20 +20,20 @@ matrix:
     - env:
         - TARGET=armv7-unknown-linux-gnueabihf
         - LINKER=arm-linux-gnueabihf-gcc
-        - PACKAGE=unipager-rpi3.tar.gz
+        - PACKAGE=dxtracker-rpi3.tar.gz
       addons:
         apt:
           packages: *armhf
     - env:
         - TARGET=i686-unknown-linux-gnu
-        - PACKAGE=unipager-i686.tar.gz
+        - PACKAGE=dxtracker-i686.tar.gz
       addons:
         apt:
           packages:
             - gcc-multilib
     - env:
         - TARGET=x86_64-unknown-linux-gnu
-        - PACKAGE=unipager-x86_64.tar.gz
+        - PACKAGE=dxtracker-x86_64.tar.gz
 
 install:
   - export PATH="$PATH:$HOME/.cargo/bin"
