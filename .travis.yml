@@ -51,7 +51,7 @@ script:
   - cargo build --target $TARGET --verbose --release
 
 before_deploy:
-  - tar -czf $PACKAGE -C target/$TARGET/release/ dxtracker
+  - tar -czf $PACKAGE -C target/$TARGET/release/ dxtool
 
 deploy:
 deploy:
