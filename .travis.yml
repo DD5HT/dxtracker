@@ -12,6 +12,7 @@ matrix:
   - rust: beta
   fast_finish: true
 script:
+  - cargo test
   - cargo build --verbose --release
 before_deploy:
   - tar -czf dxtool.tar.gz -C target/release/ dxtool
