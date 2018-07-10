@@ -121,7 +121,7 @@ pub fn dir_build() -> Result<String, String> {
     }
 }
 
-///Checks if call invalid
+///Checks if call is invalid
 fn check_call(call: &str) -> Result<&str, String> {
     if call.len() < 3 || call.len() > 20 {
         return Err(String::from("Invalid call format!"));
@@ -129,6 +129,7 @@ fn check_call(call: &str) -> Result<&str, String> {
         Ok(call)
     }
 }
+
 ///Returns the PathBuf for the default Path
 fn get_home_path() -> PathBuf {
     let mut path = PathBuf::new();
@@ -137,12 +138,14 @@ fn get_home_path() -> PathBuf {
     path
 }
 
+///Returns the PathBuf for the calls.csv
 pub fn get_call_path() -> PathBuf {
     let mut path = get_home_path();
     path.push("calls.csv");
     path
 }
 
+///Return the PathBuf for the config.toml
 pub fn get_config_path() -> PathBuf {
     let mut path = get_home_path();
     path.push("config.toml");
