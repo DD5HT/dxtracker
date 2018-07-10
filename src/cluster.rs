@@ -34,15 +34,21 @@ impl Cluster{
 
         loaded
     }
-    //TODO: Propper Error handeling!
-    ///Inititalized the config
-    pub fn init_config(&self) -> Result<String, String> {
-        let serial_cluster = toml::to_string_pretty(&self).unwrap();
-
-        let mut file = File::create(::get_config_path()).expect("Can't create file");
-        file.write(serial_cluster.as_bytes()).unwrap();
-
-        Ok("YOLO".to_owned())
+    ///Inititalizes the config
+    ///returns amount of written bytes
+    pub fn init_config(&self) -> Result<usize, String> {
+        let serial_cluster = match toml::to_string_pretty(&self){
+            Ok(serial_cluster) => serial_cluster,
+            Err(err) => return Err(err.to_string()),
+        };
+        let mut file =  match File::create(::get_config_path()) {
+            Ok(file) => file,
+            Err(err) => return Err(err.to_string()),
+        };
+        match file.write(serial_cluster.as_bytes()){
+            Ok(success) => Ok(success),
+            Err(err) => Err(err.to_string()),
+        }
     }
 }
 

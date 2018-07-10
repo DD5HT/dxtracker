@@ -96,6 +96,7 @@ pub fn remove_call(call: &str) -> Result<String, String> {
     Err("Can not remove the callsign!".to_string())
 }
 
+//TODO: Error Handling
 ///Creates the callsign list at the default location: ~/.dxtool/calls.csv 
 pub fn create_list() -> Result<&'static str, String> {
     //TODO: Maybe remove overide?

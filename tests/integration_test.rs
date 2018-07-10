@@ -48,5 +48,5 @@ fn create_config() {
     create_directory();
 
     let pre = Cluster::new("cluster.dl9gtb.de:8000", "DD5HT").init_config();
-    assert_eq!(pre, Ok("YOLO".to_owned()));
+    assert!(pre.unwrap() > 0); 
 }
