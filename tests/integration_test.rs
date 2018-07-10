@@ -2,7 +2,6 @@ extern crate dxtracker;
 
 #[test]
 fn cluster_insert_remove() {
-
     open_callsign_list();
 
     dxtracker::dir_build().expect("Can't create directory!");
@@ -13,21 +12,19 @@ fn cluster_insert_remove() {
     assert_eq!(dxtracker::remove_call(call), Ok(formated_call));
 }
 
-
 #[test]
 fn load_config() {
     use dxtracker::cluster::Cluster;
-    
-    create_config();
-    
-    let pre = Cluster::new("cluster.dl9gtb.de:8000", "DD5HT");
-    assert_eq!(Cluster::load_config(), Some(pre) );
-}
 
+    create_config();
+
+    let pre = Cluster::new("cluster.dl9gtb.de:8000", "DD5HT");
+    assert_eq!(Cluster::load_config(), Some(pre));
+}
 
 // Helper functions
 
-///Wrapper function for system specific test 
+///Wrapper function for system specific test
 /// FIXME: system unspecific
 fn create_directory() {
     dxtracker::dir_build().unwrap();
@@ -36,7 +33,7 @@ fn create_directory() {
 
 fn open_callsign_list() {
     create_directory();
-    
+
     dxtracker::create_list().unwrap();
     let list = dxtracker::get_call_path();
 
@@ -48,5 +45,5 @@ fn create_config() {
     create_directory();
 
     let pre = Cluster::new("cluster.dl9gtb.de:8000", "DD5HT").init_config();
-    assert!(pre.unwrap() > 0); 
+    assert!(pre.unwrap() > 0);
 }
