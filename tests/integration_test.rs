@@ -1,17 +1,11 @@
 extern crate dxtracker;
 
-//use std::path::{Path, PathBuf};
-
-/*
-#[test]
-fn check_path() {
-    assert_eq!(dxtracker::get_directory(), PathBuf::from("/home/hendrik/.dxtool/calls.csv"));
-}
-*/
-
 #[test]
 fn cluster_insert_remove() {
-    dxtracker::create_list("PLACEHOLDER").unwrap();
+    open_callsign_list();
+
+    dxtracker::dir_build().expect("Can't create directory!");
+    dxtracker::create_list().unwrap();
     let call = "TeStCaLl";
     let formated_call = call.to_uppercase(); //TODO: add assert for exists
     assert_eq!(dxtracker::insert_call(call), Ok(formated_call.clone()));
@@ -19,22 +13,37 @@ fn cluster_insert_remove() {
 }
 
 #[test]
+fn load_config() {
+    use dxtracker::cluster::Cluster;
+
+    create_config();
+
+    let pre = Cluster::new("cluster.dl9gtb.de:8000", "DD5HT");
+    assert_eq!(Cluster::load_config(), Some(pre));
+}
+
+// Helper functions
+
+///Wrapper function for system specific test
+/// FIXME: system unspecific
+fn create_directory() {
+    dxtracker::dir_build().unwrap();
+    //assert_eq!(dxtracker::dir_build(), Ok("/home/hendrik/.dxtool/".to_owned()));
+}
+
 fn open_callsign_list() {
-    dxtracker::create_list("PLACEHOLDER").unwrap();
-    let list = dxtracker::get_directory();
+    create_directory();
+
+    dxtracker::create_list().unwrap();
+    let list = dxtracker::get_call_path();
 
     assert_eq!(dxtracker::open_callsignlist(list), vec!["#######"]);
 }
 
+fn create_config() {
+    use dxtracker::cluster::Cluster;
+    create_directory();
 
-/*
-#[test]
-fn cluster_connection_test() {
-    use dxtracker::cluster::{connect};
-    
-    let call = "DD5HT";
-    let cluster = "cluster.dl9gtb.de:8000";
-    connect(cluster, call);
-
+    let pre = Cluster::new("cluster.dl9gtb.de:8000", "DD5HT").init_config();
+    assert!(pre.unwrap() > 0);
 }
-*/
