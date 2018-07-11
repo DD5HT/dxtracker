@@ -114,10 +114,10 @@ pub fn create_list() -> Result<&'static str, String> {
 }
 ///Creates a the directory
 pub fn dir_build() -> Result<String, String> {
-    match DirBuilder::new().create(get_home_path()) {
-        Ok(_) => Ok(get_home_path().to_str().unwrap().to_owned()),
+    match DirBuilder::new().create(get_tool_path()) {
+        Ok(_) => Ok(get_tool_path().to_str().unwrap().to_owned()),
         Err(err) => match err.kind() {
-            AlreadyExists => Ok(get_home_path().to_str().unwrap().to_owned()),
+            AlreadyExists => Ok(get_tool_path().to_str().unwrap().to_owned()),
             _ => Err(err.to_string()),
         },
     }
@@ -133,7 +133,7 @@ fn check_call(call: &str) -> Result<&str, String> {
 }
 
 ///Returns the PathBuf for the default Path
-fn get_home_path() -> PathBuf {
+fn get_tool_path() -> PathBuf {
     let mut path = PathBuf::new();
     path.push(dirs::home_dir().unwrap());
     path.push(".dxtool/");
@@ -142,14 +142,14 @@ fn get_home_path() -> PathBuf {
 
 ///Returns the PathBuf for the calls.csv
 pub fn get_call_path() -> PathBuf {
-    let mut path = get_home_path();
+    let mut path = get_tool_path();
     path.push("calls.csv");
     path
 }
 
 ///Return the PathBuf for the config.toml
 pub fn get_config_path() -> PathBuf {
-    let mut path = get_home_path();
+    let mut path = get_tool_path();
     path.push("config.toml");
     path
 }
