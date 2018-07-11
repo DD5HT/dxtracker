@@ -135,7 +135,10 @@ fn check_call(call: &str) -> Result<&str, String> {
 ///Returns the PathBuf for the default Path
 fn get_tool_path() -> PathBuf {
     let mut path = PathBuf::new();
-    path.push(dirs::home_dir().unwrap());
+    match dirs::home_dir() {
+        Some(x) => path.push(x),
+        None => panic!("Can't fine home directory"),
+    };   
     path.push(".dxtool/");
     path
 }

@@ -59,8 +59,10 @@ fn main() {
     }
 
     if matches.is_present("START") {
-        let cluster = Cluster::load_config();
-        connect(cluster.unwrap()); //TODO: remove unwrap
+        match Cluster::load_config() {
+            Some(x) => connect(x),
+            None => panic!("Can't load config. \n Please create a config file first!"),
+        }
     }
 
     //let config = matches.value_of("config").unwrap_or("default.conf");
