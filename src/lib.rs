@@ -1,10 +1,12 @@
 #![feature(vec_remove_item)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 
+extern crate dirs;
 extern crate toml;
 #[macro_use]
 extern crate serde_derive;
 
-use std::env;
 use std::fs::File;
 use std::fs::{DirBuilder, OpenOptions};
 use std::io::prelude::*;
@@ -133,7 +135,7 @@ fn check_call(call: &str) -> Result<&str, String> {
 ///Returns the PathBuf for the default Path
 fn get_home_path() -> PathBuf {
     let mut path = PathBuf::new();
-    path.push(env::home_dir().unwrap());
+    path.push(dirs::home_dir().unwrap());
     path.push(".dxtool/");
     path
 }
