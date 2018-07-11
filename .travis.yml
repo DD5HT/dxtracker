@@ -5,9 +5,9 @@ rust:
 - nightly
 cache: 
 - apt
+global:
+- NAME=dxtool
 matrix:
-  global:
-    - NAME=dxtool
   include:
     - env:
         - TARGET=arm-unknown-linux-gnueabihf
