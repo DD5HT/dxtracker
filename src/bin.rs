@@ -6,7 +6,7 @@ extern crate dxtracker;
 use clap::{App, Arg};
 use dxtracker::cluster::*;
 
-//TODO ADD CONFIG dxtool -c --call DD5HT --server DXCLUSTER ?
+//TODO: ADD CONFIG dxtool -c --call DD5HT --server DXCLUSTER ?
 fn main() {
     let matches = App::new("DX Tool")
         .version("0.1 Alpha")
