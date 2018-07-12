@@ -9,7 +9,7 @@ use dxtracker::cluster::*;
 //TODO: ADD CONFIG dxtool -c --call DD5HT --server DXCLUSTER ?
 fn main() {
     let matches = App::new("DX Tool")
-        .version("0.1 Alpha")
+        .version("0.1.1")
         .author("Hendrik, DD5HT, <hendrik@dd5ht.de>")
         .about("Connects to the DX Cluster via telnet and and filters it via a custom list")
         .arg(
@@ -48,6 +48,12 @@ fn main() {
                 .help("Removes a callsign from the list")
                 .takes_value(true),
         )
+        .arg(
+            Arg::with_name("INIT")
+                .short("i")
+                .long("init")
+                .help("Init the program //Temporary solution")
+        )
         .get_matches();
 
     if matches.is_present("LIST") {
@@ -64,9 +70,10 @@ fn main() {
             None => panic!("Can't load config. \n Please create a config file first!"),
         }
     }
-
-    //let config = matches.value_of("config").unwrap_or("default.conf");
-    //println!("Value for config: {}", config);
+    /*
+    let config = matches.value_of("config").unwrap_or("default.conf");
+    println!("Value for config: {}", config);
+    */
 
     if let Some(call) = matches.value_of("ADD") {
         match dxtracker::insert_call(call) {
@@ -81,9 +88,27 @@ fn main() {
             Err(e) => println!("{}", e),
         }
     };
-
+    
+    if matches.is_present("INIT") {
+        init();
+    };
+    
     // TODO: ADD INIT for first bootup?
     //Set default server and callsign
     // Create Folder, Create Callsign list, Create default config?
     // Read in Config
+}
+
+fn init() {
+     let servername = "cluster.dl9gtb.de:8000";
+     let callsign = "DD5HT";
+     match dxtracker::dir_build() {
+        Ok(_) => println!("Succesfuly created the directory!"),
+        Err(err) => println!("Failed to create dir: {}", err),
+    }
+
+    match dxtracker::cluster::Cluster::new(servername, callsign).init_config(){
+        Ok(_)  => println!("Init Sucessful"),
+        Err(err) => println!("Error: {}",err ),
+    };
 }
