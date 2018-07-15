@@ -58,7 +58,7 @@ script:
   - cargo build --target $TARGET --verbose --release
 
 before_deploy:
-  - tar -czf $PACKAGE -C target/$TARGET/release/ $NAME
+  - tar -czf $PACKAGE -C target/$TARGET/release/ dxtool
 
 deploy:
 deploy:
