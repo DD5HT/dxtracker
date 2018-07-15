@@ -27,15 +27,15 @@ mod call_filter;
 ///
 ///let entry: Vec<&str> = vec!["EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z"];
 ///let searchlist: Vec<String> = vec![String::from("IK3VUU")];
-///assert_eq!(get_callsign(&entry, searchlist).is_some(), true);
+///assert_eq!(get_callsign(&entry, &searchlist).is_some(), true);
 /// ```
-pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: Vec<String>) -> Option<String> {
+pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: &Vec<String>) -> Option<String> {
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
         let call = entry[2].as_ref();
         let freq = entry[1].as_ref();
         let mode = entry[3].as_ref();
-        match searchlist.into_iter().find(|x| x == call) {
+        match searchlist.into_iter().find(|&x| x == call) {
             Some(c) => Some(format!(
                 "Spotted {} on {} by {} in {}",
                 c, freq, spotter, mode

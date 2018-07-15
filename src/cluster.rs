@@ -71,7 +71,7 @@ pub fn connect(cluster: Cluster) {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
                                                 //println!("{:?}", filter_entry(buffer));
-        if let Some(i) = ::get_callsign(&filter_entry(buffer), callsigns.clone()) {
+        if let Some(i) = ::get_callsign(&filter_entry(buffer), &callsigns) {
             println!("{}", i);
         };
     }
