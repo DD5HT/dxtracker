@@ -9,7 +9,7 @@ use dxtracker::cluster::*;
 
 fn main() {
     let matches = App::new("DX Tool")
-        .version("0.1.1")
+        .version("0.1.2")
         .author("Hendrik, DD5HT, <hendrik@dd5ht.de>")
         .about("Connects to the DX Cluster via telnet and and filters it via a custom list")
         .arg(
