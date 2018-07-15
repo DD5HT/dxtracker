@@ -1,6 +1,6 @@
 [package]
 name = "dx-analyser"
-version = "0.1.0"
+version = "0.1.2"
 authors = ["hendrik@dd5ht.de"]
 autobins = false
 
@@ -9,6 +9,7 @@ clap = "*"
 toml = "*"
 serde = "*"
 serde_derive = "*"
+dirs = "*"
 
 [profile.release]
 lto = false

@@ -8,9 +8,10 @@ cache:
 matrix:
   include:
     - env:
+        - NAME=dxtool
         - TARGET=arm-unknown-linux-gnueabihf
         - LINKER=arm-linux-gnueabihf-gcc
-        - PACKAGE=dxtracker-rpi2.tar.gz
+        - PACKAGE=$NAME-rpi2.tar.gz
       addons:
         apt:
           packages: &armhf
@@ -18,22 +19,25 @@ matrix:
             - libc6-armhf-cross
             - libc6-dev-armhf-cross
     - env:
+        - NAME=dxtool
         - TARGET=armv7-unknown-linux-gnueabihf
         - LINKER=arm-linux-gnueabihf-gcc
-        - PACKAGE=dxtracker-rpi3.tar.gz
+        - PACKAGE=$NAME-rpi3.tar.gz
       addons:
         apt:
           packages: *armhf
     - env:
+        - NAME=dxtool
         - TARGET=i686-unknown-linux-gnu
-        - PACKAGE=dxtracker-i686.tar.gz
+        - PACKAGE=$NAME-i686.tar.gz
       addons:
         apt:
           packages:
             - gcc-multilib
     - env:
+        - NAME=dxtool
         - TARGET=x86_64-unknown-linux-gnu
-        - PACKAGE=dxtracker-x86_64.tar.gz
+        - PACKAGE=$NAME-x86_64.tar.gz
 
 install:
   - export PATH="$PATH:$HOME/.cargo/bin"
@@ -47,7 +51,10 @@ install:
     fi
 
 script:
-  - cargo test 
+  - |
+    if [ $TARGET = "x86_64-unknown-linux-gnu" ]; then
+      cargo test
+    fi
   - cargo build --target $TARGET --verbose --release
 
 before_deploy:

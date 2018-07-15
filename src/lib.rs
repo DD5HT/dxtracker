@@ -1,10 +1,12 @@
 #![feature(vec_remove_item)]
+#![deny(unsafe_code)]
+#![deny(warnings)]
 
+extern crate dirs;
 extern crate toml;
 #[macro_use]
 extern crate serde_derive;
 
-use std::env;
 use std::fs::File;
 use std::fs::{DirBuilder, OpenOptions};
 use std::io::prelude::*;
@@ -13,6 +15,9 @@ use std::io::ErrorKind::AlreadyExists;
 use std::path::PathBuf;
 
 pub mod cluster;
+
+mod dxcc_filter;
+mod call_filter;
 
 ///Takes a formated dxcluster str vector and the list of all callsigns
 ///looks if callsign from spotted cluster is in list
@@ -70,9 +75,9 @@ pub fn insert_call(call: &str) -> Result<String, String> {
         let mut file = OpenOptions::new()
             .append(true)
             .open(get_call_path())
-            .expect("Can't open file"); //TODO: Add better error Handling here
+            .expect("Can't insert Callsign: Can't open file");
         file.write_all(new_call.as_bytes())
-            .expect("Cant write to file");
+            .expect("Can't insert Callsign: Can't write to file");
         return Ok(call.to_uppercase());
     }
 }
@@ -101,21 +106,23 @@ pub fn remove_call(call: &str) -> Result<String, String> {
     Err("Can not remove the callsign!".to_string())
 }
 
-//TODO: Error Handling
 ///Creates the callsign list at the default location: ~/.dxtool/calls.csv
-pub fn create_list() -> Result<&'static str, String> {
-    //TODO: Maybe remove overide?
-    let mut file = File::create(get_call_path()).unwrap();
-    file.write(b"#######\n").unwrap();
-
-    Ok("Created calls.csv")
+pub fn create_list() -> Result<usize, String> {
+    match get_call_path().exists() {
+        true => Ok(1),
+        false => match File::create(get_call_path()) {
+            Ok(mut file) => Ok(file.write(b"#######\n").unwrap()),
+            Err(err) => Err(err.to_string()),
+        },
+    }
 }
+
 ///Creates a the directory
 pub fn dir_build() -> Result<String, String> {
-    match DirBuilder::new().create(get_home_path()) {
-        Ok(_) => Ok(get_home_path().to_str().unwrap().to_owned()),
+    match DirBuilder::new().create(get_tool_path()) {
+        Ok(_) => Ok(get_tool_path().to_str().unwrap().to_owned()),
         Err(err) => match err.kind() {
-            AlreadyExists => Ok(get_home_path().to_str().unwrap().to_owned()),
+            AlreadyExists => Ok(get_tool_path().to_str().unwrap().to_owned()),
             _ => Err(err.to_string()),
         },
     }
@@ -131,23 +138,26 @@ fn check_call(call: &str) -> Result<&str, String> {
 }
 
 ///Returns the PathBuf for the default Path
-fn get_home_path() -> PathBuf {
+fn get_tool_path() -> PathBuf {
     let mut path = PathBuf::new();
-    path.push(env::home_dir().unwrap());
+    match dirs::home_dir() {
+        Some(x) => path.push(x),
+        None => panic!("Can't fine home directory"),
+    };
     path.push(".dxtool/");
     path
 }
 
 ///Returns the PathBuf for the calls.csv
 pub fn get_call_path() -> PathBuf {
-    let mut path = get_home_path();
+    let mut path = get_tool_path();
     path.push("calls.csv");
     path
 }
 
 ///Return the PathBuf for the config.toml
 pub fn get_config_path() -> PathBuf {
-    let mut path = get_home_path();
+    let mut path = get_tool_path();
     path.push("config.toml");
     path
 }
