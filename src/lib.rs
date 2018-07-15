@@ -103,14 +103,13 @@ pub fn remove_call(call: &str) -> Result<String, String> {
     Err("Can not remove the callsign!".to_string())
 }
 
-//TODO: Error Handling
 ///Creates the callsign list at the default location: ~/.dxtool/calls.csv
-pub fn create_list() -> Result<&'static str, String> {
-    //TODO: Maybe remove overide?
-    let mut file = File::create(get_call_path()).unwrap();
-    file.write(b"#######\n").unwrap();
-
-    Ok("Created calls.csv")
+pub fn create_list() -> Result<usize, String> {
+    //TODO: Check if file exists! first
+    match File::create(get_call_path()){
+        Ok(mut file) => Ok(file.write(b"#######\n").unwrap()),
+        Err(err) => Err(err.to_string()), 
+    }
 }
 ///Creates a the directory
 pub fn dir_build() -> Result<String, String> {
