@@ -72,9 +72,9 @@ pub fn insert_call(call: &str) -> Result<String, String> {
         let mut file = OpenOptions::new()
             .append(true)
             .open(get_call_path())
-            .expect("Can't open file"); //TODO: Add better error Handling here
+            .expect("Can't insert Callsign: Can't open file");
         file.write_all(new_call.as_bytes())
-            .expect("Cant write to file");
+            .expect("Can't insert Callsign: Can't write to file");
         return Ok(call.to_uppercase());
     }
 }
@@ -105,12 +105,15 @@ pub fn remove_call(call: &str) -> Result<String, String> {
 
 ///Creates the callsign list at the default location: ~/.dxtool/calls.csv
 pub fn create_list() -> Result<usize, String> {
-    //TODO: Check if file exists! first
-    match File::create(get_call_path()){
-        Ok(mut file) => Ok(file.write(b"#######\n").unwrap()),
-        Err(err) => Err(err.to_string()), 
+    match get_call_path().exists() {
+        true => Ok(1),
+        false => match File::create(get_call_path()) {
+            Ok(mut file) => Ok(file.write(b"#######\n").unwrap()),
+            Err(err) => Err(err.to_string()),
+        },
     }
 }
+
 ///Creates a the directory
 pub fn dir_build() -> Result<String, String> {
     match DirBuilder::new().create(get_tool_path()) {
@@ -137,7 +140,7 @@ fn get_tool_path() -> PathBuf {
     match dirs::home_dir() {
         Some(x) => path.push(x),
         None => panic!("Can't fine home directory"),
-    };   
+    };
     path.push(".dxtool/");
     path
 }
