@@ -29,7 +29,6 @@ impl Cluster {
                 config.push('\n');
             };
         }
-        println!("Loaded following configuration: \n{}", config); //FIXME: remove this println
         let loaded = match toml::from_str(&config) {
             Ok(n) => Some(n),
             Err(_) => None,

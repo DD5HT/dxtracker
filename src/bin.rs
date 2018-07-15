@@ -4,9 +4,9 @@ extern crate clap;
 extern crate dxtracker;
 
 use clap::{App, Arg};
+use dxtracker::*;
 use dxtracker::cluster::*;
 
-//TODO: ADD CONFIG dxtool -c --call DD5HT --server DXCLUSTER ?
 fn main() {
     let matches = App::new("DX Tool")
         .version("0.1 Alpha")
@@ -52,10 +52,10 @@ fn main() {
 
     if matches.is_present("LIST") {
         println!("Following callsigns are in the list: ");
-        //TODO: Create pretty callsign print list;
-        for i in dxtracker::open_callsignlist(dxtracker::get_call_path()) {
-            println!("{}", i)
-        }
+        open_callsignlist(get_call_path())
+            .into_iter()
+            .skip(1)
+            .for_each(|x| println!("{}",x));
     }
 
     if matches.is_present("START") {
@@ -69,14 +69,14 @@ fn main() {
     //println!("Value for config: {}", config);
 
     if let Some(call) = matches.value_of("ADD") {
-        match dxtracker::insert_call(call) {
+        match insert_call(call) {
             Ok(i) => println!("Added {} to the callsign list.", i),
             Err(e) => println!("{}", e),
         }
     };
 
     if let Some(call) = matches.value_of("REMOVE") {
-        match dxtracker::remove_call(call) {
+        match remove_call(call) {
             Ok(i) => println!("Removed {} from the callsign list.", i),
             Err(e) => println!("{}", e),
         }
