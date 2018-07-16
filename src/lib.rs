@@ -118,7 +118,8 @@ pub fn create_list() -> Result<usize, String> {
     }
 }
 
-///Creates a the directory
+//TODO: Add arguments for the dir build
+///Creates a directory for the given path
 pub fn dir_build() -> Result<String, String> {
     match DirBuilder::new().create(get_tool_path()) {
         Ok(_) => Ok(get_tool_path().to_str().unwrap().to_owned()),
