@@ -16,8 +16,8 @@ use std::path::PathBuf;
 
 pub mod cluster;
 
-mod dxcc_filter;
 mod call_filter;
+mod dxcc_filter;
 
 ///Takes a formated dxcluster str vector and the list of all callsigns
 ///looks if callsign from spotted cluster is in list
@@ -29,7 +29,7 @@ mod call_filter;
 ///let searchlist: Vec<String> = vec![String::from("IK3VUU")];
 ///assert_eq!(get_callsign(&entry, &searchlist).is_some(), true);
 /// ```
-pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: &Vec<String>) -> Option<String> {
+pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: &[String]) -> Option<String> {
     if entry.len() > 3 {
         let spotter = entry[0].as_ref().trim_right_matches("-#:");
         let call = entry[2].as_ref();
@@ -66,10 +66,10 @@ pub fn open_callsignlist(list: PathBuf) -> Vec<String> {
 pub fn insert_call(call: &str) -> Result<String, String> {
     check_call(call)?;
 
-    let mut new_call = String::from(call.to_uppercase());
+    let mut new_call = call.to_uppercase();
     let list = open_callsignlist(get_call_path());
     if list.contains(&new_call) {
-        return Err(format!("{} is alread in the callsign list!", new_call));
+        Err(format!("{} is alread in the callsign list!", new_call))
     } else {
         new_call.push_str("\n");
         let mut file = OpenOptions::new()
@@ -78,7 +78,7 @@ pub fn insert_call(call: &str) -> Result<String, String> {
             .expect("Can't insert Callsign: Can't open file");
         file.write_all(new_call.as_bytes())
             .expect("Can't insert Callsign: Can't write to file");
-        return Ok(call.to_uppercase());
+        Ok(call.to_uppercase())
     }
 }
 
@@ -99,7 +99,7 @@ pub fn remove_call(call: &str) -> Result<String, String> {
 
         for i in newlist {
             let content = i + "\n";
-            file.write(content.as_bytes()).unwrap();
+            file.write_all(content.as_bytes()).unwrap();
         }
         return Ok(call.to_uppercase());
     }
@@ -108,12 +108,13 @@ pub fn remove_call(call: &str) -> Result<String, String> {
 
 ///Creates the callsign list at the default location: ~/.dxtool/calls.csv
 pub fn create_list() -> Result<usize, String> {
-    match get_call_path().exists() {
-        true => Ok(1),
-        false => match File::create(get_call_path()) {
+    if get_call_path().exists() {
+        Ok(1)
+    } else {
+        match File::create(get_call_path()) {
             Ok(mut file) => Ok(file.write(b"#######\n").unwrap()),
             Err(err) => Err(err.to_string()),
-        },
+        }
     }
 }
 
@@ -131,7 +132,7 @@ pub fn dir_build() -> Result<String, String> {
 ///Checks if call is invalid
 fn check_call(call: &str) -> Result<&str, String> {
     if call.len() < 3 || call.len() > 20 {
-        return Err(String::from("Invalid call format!"));
+        Err(String::from("Invalid call format!"))
     } else {
         Ok(call)
     }
