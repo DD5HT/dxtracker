@@ -11,13 +11,14 @@ pub struct Cluster {
 }
 
 impl Cluster {
+    ///Creates a new Cluster struct
     pub fn new(server: &str, call: &str) -> Cluster {
         Cluster {
             server: String::from(server),
             callsign: String::from(call),
         }
     }
-
+    ///Loads the configuration file into a Cluster struct
     pub fn load_config() -> Option<Cluster> {
         let config_location = ::get_config_path();
         let mut config: String = String::from("");
@@ -51,9 +52,8 @@ impl Cluster {
         }
     }
 }
-
 /// Starts the DX Cluster and connects to it via the given cluster address and call
-/// It repeatedly callss the get_callsign function with the filtered buffer
+/// It repeatedly calls the get_callsign function and checks it against the filter
 /// entries
 pub fn connect(cluster: Cluster) {
     //Connect to dx-cluster server
@@ -74,7 +74,6 @@ pub fn connect(cluster: Cluster) {
         };
     }
 }
-
 ///Filters the cluster entries and returns a cleaned up vector of strings
 fn filter_entry(entry: &str) -> Vec<String> {
     let mut output: Vec<String> = Vec::with_capacity(16); //Malfromated entries can lead to new memory allocation
