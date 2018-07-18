@@ -8,15 +8,17 @@ extern crate regex;
 
 use regex::Regex;
 
-struct Entity {
+pub struct Entity {
     prefix: &'static str,
     name: &'static str,
     prefixRange: Vec<&'static str>,
 }
-
-fn match_call(call: &str) -> bool {
+//FIXME: return entitiy struct
+///Takes a callsign and returns a Option<Entity>
+pub fn match_call(call: &str) -> Option<Entity> {
     let re = Regex::new(r"^(D[A-R])").unwrap();
-    re.is_match(call)
+    re.is_match(call);
+    unimplemented!()
 }
 
 fn sample_csv() {
@@ -24,7 +26,7 @@ fn sample_csv() {
     let germany_newformat = "DL;Germany;DA-DR;Y2-Y9;";
     let germany_prefix = "DA-DR";
 }
-
+//FIXME:
 fn prefix_to_regex(prefix: &str) -> &str {
     unimplemented!()
 }
