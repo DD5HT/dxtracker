@@ -2,6 +2,7 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
+extern crate regex;
 extern crate dirs;
 extern crate toml;
 #[macro_use]
