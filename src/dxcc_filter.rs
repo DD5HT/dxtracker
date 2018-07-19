@@ -8,6 +8,7 @@ extern crate regex;
 
 use regex::Regex;
 
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct Entity {
     prefix: &'static str,
     name: &'static str,
@@ -15,7 +16,7 @@ pub struct Entity {
 }
 //FIXME: return entitiy struct
 ///Takes a callsign and returns a Option<Entity>
-pub fn match_call(call: &str) -> Option<Entity> {
+pub fn match_call(call: &str) -> Option<&str> {
     let re = Regex::new(r"^(D[A-R])").unwrap();
     re.is_match(call);
     unimplemented!()
@@ -27,8 +28,14 @@ fn sample_csv() {
     let germany_prefix = "DA-DR";
 }
 //FIXME:
-fn prefix_to_regex(prefix: &str) -> &str {
-    unimplemented!()
+fn prefix_to_regex(prefix: &str) -> Option<&str> {
+    if prefix.len() == 5 {
+        let splitted: Vec<&str> = prefix.split('-').collect();
+        println!("{:?}",splitted );
+        Some(prefix)
+    } else {
+        None
+    }
 }
 
 #[cfg(test)]
@@ -36,20 +43,17 @@ mod tests {
     use super::*;
     #[test]
     fn prefix_regex_test() {
-        assert_eq!(prefix_to_regex("DA-DR"), "^(D[A-R])");
-        assert_eq!(prefix_to_regex("AA-AL"), "^(A[A-L])");
-        assert_eq!(prefix_to_regex("8A-8I"), "^(8[A-I])");
+        assert_eq!(prefix_to_regex("DA-DR"), Some("^(D[A-R])"));
+        assert_eq!(prefix_to_regex("AA-AL"), Some("^(A[A-L])"));
+        assert_eq!(prefix_to_regex("8A-8I"), Some("^(8[A-I])"));
     }
 
     #[test]
     fn match_call_test() {
-        assert!(match_call("DD5HT"));
-        assert!(match_call("DL0IU"));
-        assert!(match_call("DK0CD"));
-        assert!(match_call("DM5EE"));
-        assert!(match_call("DO3BLABA"));
-        assert!(!match_call("KK1DD"));
-        assert!(!match_call("D1DLA"));
+        assert_eq!(match_call("DD5HT"), Some("Germany"));
+        assert_eq!(match_call("DL0IU"), Some("Germany"));
+        assert_eq!(match_call("DD5HT"), Some("Germany"));
+        assert_eq!(match_call("DD5HT"), Some("Germany"));
         //assert!(!match_call("DD1"));
     }
 }
