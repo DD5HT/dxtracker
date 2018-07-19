@@ -10,6 +10,7 @@ toml = "*"
 serde = "*"
 serde_derive = "*"
 dirs = "*"
+regex = "*"
 
 [profile.release]
 lto = false

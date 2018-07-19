@@ -1,3 +1,5 @@
+//!Contains the Cluster Client to connect to a given DX-Cluster server.
+//!Provids functions to read and write config files for the connection.
 use std::fs::File;
 use std::io::prelude::{BufRead, Write};
 use std::io::BufReader;
@@ -11,13 +13,14 @@ pub struct Cluster {
 }
 
 impl Cluster {
+    ///Creates a new Cluster struct
     pub fn new(server: &str, call: &str) -> Cluster {
         Cluster {
             server: String::from(server),
             callsign: String::from(call),
         }
     }
-
+    ///Loads the configuration file into a Cluster struct
     pub fn load_config() -> Option<Cluster> {
         let config_location = ::get_config_path();
         let mut config: String = String::from("");
@@ -29,12 +32,10 @@ impl Cluster {
                 config.push('\n');
             };
         }
-        let loaded = match toml::from_str(&config) {
+        match toml::from_str(&config) {
             Ok(n) => Some(n),
             Err(_) => None,
-        };
-
-        loaded
+        }
     }
     ///Inititalizes the config
     ///returns amount of written bytes
@@ -53,9 +54,8 @@ impl Cluster {
         }
     }
 }
-
 /// Starts the DX Cluster and connects to it via the given cluster address and call
-/// It repeatedly callss the get_callsign function with the filtered buffer
+/// It repeatedly calls the get_callsign function and checks it against the filter
 /// entries
 pub fn connect(cluster: Cluster) {
     //Connect to dx-cluster server
@@ -71,18 +71,17 @@ pub fn connect(cluster: Cluster) {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
                                                 //println!("{:?}", filter_entry(buffer));
-        if let Some(i) = ::get_callsign(&filter_entry(buffer), callsigns.clone()) {
+        if let Some(i) = ::get_callsign(&filter_entry(&buffer), &callsigns) {
             println!("{}", i);
         };
     }
 }
-
 ///Filters the cluster entries and returns a cleaned up vector of strings
-fn filter_entry(entry: String) -> Vec<String> {
+fn filter_entry(entry: &str) -> Vec<String> {
     let mut output: Vec<String> = Vec::with_capacity(16); //Malfromated entries can lead to new memory allocation
     entry
         .trim_right_matches("\r\n")
-        .split(" ")
+        .split(' ')
         .filter(|&t| match t {
             "de" => false,
             "DX" => false,
@@ -99,17 +98,17 @@ mod tests {
 
     #[test]
     fn filter_entry_test() {
-        let sample0 = String::from(
-            "DX de EA5WU-#:    3508.0  IK3VUU       CW 19 dB 20 WPM CQ             2149Z\r\n",
-        );
+        let sample0 =
+            "DX de EA5WU-#:    3508.0  IK3VUU       CW 19 dB 20 WPM CQ             2149Z\r\n";
+
         let expected0: Vec<&str> = vec![
             "EA5WU-#:", "3508.0", "IK3VUU", "CW", "19", "dB", "20", "WPM", "CQ", "2149Z",
         ];
         assert_eq!(filter_entry(sample0), expected0);
 
-        let sample1 = String::from(
-            "DX de K8WHA:     14081.0  TG9AHM       CQ DX RTTY Correction Freq     2150Z\r\n",
-        );
+        let sample1 =
+            "DX de K8WHA:     14081.0  TG9AHM       CQ DX RTTY Correction Freq     2150Z\r\n";
+
         let expected1: Vec<&str> = vec![
             "K8WHA:",
             "14081.0",
