@@ -14,10 +14,11 @@ pub struct Entity {
     name: &'static str,
     prefixRange: Vec<&'static str>,
 }
+
 //FIXME: return entitiy struct
 ///Takes a callsign and returns a Option<Entity>
 pub fn match_call(call: &str) -> Option<&str> {
-    let re = Regex::new(r"^(D[A-R])").unwrap();
+    let re = prefix_to_regex("DA-DR").unwrap();
     re.is_match(call);
     Some("Germany")
 }
@@ -32,9 +33,9 @@ fn sample_csv() {
 ///"DA-DR" and converts it to a regex: "^(D[A-R])"
 ///```
 /// use dxtracker::dxcc_filter::*;
-/// assert_eq!(prefix_to_regex("DA-DR"), Some("^(D[A-R])".to_string()));
+/// assert_eq!(prefix_to_regex("DA-DR").unwrap().as_str(), "^(D[A-R])");
 ///```
-pub fn prefix_to_regex(prefix: &str) -> Option<String> {
+pub fn prefix_to_regex(prefix: &str) -> Option<Regex> {
     if prefix.len() == 5 {
         let prefix_regex = format!(
             r"^({}[{}-{}])",
@@ -42,7 +43,10 @@ pub fn prefix_to_regex(prefix: &str) -> Option<String> {
             prefix.get(1..2).unwrap(),
             prefix.get(4..5).unwrap()
         );
-        Some(prefix_regex)
+        match Regex::new(prefix_regex.as_ref()) {
+            Ok(fix) => Some(fix),
+            Err(e) => None,
+        }
     } else {
         None
     }
@@ -53,10 +57,10 @@ mod tests {
     use super::*;
     #[test]
     fn prefix_regex_test() {
-        assert_eq!(prefix_to_regex("DA-DR"), Some("^(D[A-R])".to_string()));
-        assert_eq!(prefix_to_regex("AA-AL"), Some("^(A[A-L])".to_string()));
-        assert_eq!(prefix_to_regex("8A-8I"), Some("^(8[A-I])".to_string()));
-        assert_eq!(prefix_to_regex("MALLFROMATED"), None);
+        assert_eq!(prefix_to_regex("DA-DR").unwrap().as_str(), "^(D[A-R])");
+        assert_eq!(prefix_to_regex("AA-AL").unwrap().as_str(), "^(A[A-L])");
+        assert_eq!(prefix_to_regex("8A-8I").unwrap().as_str(), "^(8[A-I])");
+        assert!(prefix_to_regex("MALLFROMATED").is_none());
     }
 
     #[test]
@@ -64,7 +68,7 @@ mod tests {
         assert_eq!(match_call("DD5HT"), Some("Germany"));
         assert_eq!(match_call("DL0IU"), Some("Germany"));
         assert_eq!(match_call("DD5HT"), Some("Germany"));
-        assert_eq!(match_call("DD5HT"), Some("Germany"));
+        assert_eq!(match_call("DR5DT"), Some("Germany"));
         //assert!(!match_call("DD1"));
     }
 }
