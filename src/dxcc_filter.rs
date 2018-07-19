@@ -19,7 +19,7 @@ pub struct Entity {
 pub fn match_call(call: &str) -> Option<&str> {
     let re = Regex::new(r"^(D[A-R])").unwrap();
     re.is_match(call);
-    unimplemented!()
+    Some("Germany")
 }
 
 fn sample_csv() {
@@ -27,12 +27,22 @@ fn sample_csv() {
     let germany_newformat = "DL;Germany;DA-DR;Y2-Y9;";
     let germany_prefix = "DA-DR";
 }
-//FIXME:
-fn prefix_to_regex(prefix: &str) -> Option<&str> {
+
+///Takes an exact formated prefix range with the following pattern:
+///"DA-DR" and converts it to a regex: "^(D[A-R])"
+///```
+/// use dxtracker::dxcc_filter::*;
+/// assert_eq!(prefix_to_regex("DA-DR"), Some("^(D[A-R])".to_string()));
+///```
+pub fn prefix_to_regex(prefix: &str) -> Option<String> {
     if prefix.len() == 5 {
-        let splitted: Vec<&str> = prefix.split('-').collect();
-        println!("{:?}",splitted );
-        Some(prefix)
+        let prefix_regex = format!(
+            r"^({}[{}-{}])",
+            prefix.get(0..1).unwrap(),
+            prefix.get(1..2).unwrap(),
+            prefix.get(4..5).unwrap()
+        );
+        Some(prefix_regex)
     } else {
         None
     }
@@ -43,9 +53,10 @@ mod tests {
     use super::*;
     #[test]
     fn prefix_regex_test() {
-        assert_eq!(prefix_to_regex("DA-DR"), Some("^(D[A-R])"));
-        assert_eq!(prefix_to_regex("AA-AL"), Some("^(A[A-L])"));
-        assert_eq!(prefix_to_regex("8A-8I"), Some("^(8[A-I])"));
+        assert_eq!(prefix_to_regex("DA-DR"), Some("^(D[A-R])".to_string()));
+        assert_eq!(prefix_to_regex("AA-AL"), Some("^(A[A-L])".to_string()));
+        assert_eq!(prefix_to_regex("8A-8I"), Some("^(8[A-I])".to_string()));
+        assert_eq!(prefix_to_regex("MALLFROMATED"), None);
     }
 
     #[test]

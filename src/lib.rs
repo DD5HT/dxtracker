@@ -16,9 +16,10 @@ use std::io::ErrorKind::AlreadyExists;
 use std::path::PathBuf;
 
 pub mod cluster;
+pub mod dxcc_filter;
 
 mod call_filter;
-mod dxcc_filter;
+
 
 ///Takes a formated dxcluster str vector and the list of all callsigns
 ///looks if callsign from spotted cluster is in list
