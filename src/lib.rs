@@ -5,6 +5,7 @@
 extern crate regex;
 extern crate dirs;
 extern crate toml;
+extern crate csv;
 #[macro_use]
 extern crate serde_derive;
 

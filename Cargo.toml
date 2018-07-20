@@ -7,6 +7,7 @@ autobins = false
 [dependencies]
 clap = "*"
 toml = "*"
+csv = "*"
 serde = "*"
 serde_derive = "*"
 dirs = "*"
