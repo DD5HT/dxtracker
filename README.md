@@ -4,6 +4,16 @@ A simple Rust Telnet Client, which connects to an DX Cluster Server. It also add
 
 [![Build Status](https://travis-ci.org/DD5HT/dxtracker.svg?branch=master)](https://travis-ci.org/DD5HT/dxtracker)
 
+## Usage
+You can either use it as a library or use the included command line tool.
+Just run:
+```
+cargo build --release
+cd target/release/
+./dxtool -h
+./dxtool -i 
+```
+
 ## Disclaimer
 
 I also use this project to experiment with git/ github TDD and Travis CI so chances are that it breaks.
