@@ -92,6 +92,7 @@ mod tests {
         assert_eq!(match_call("DL0IU"), germany);
         assert_eq!(match_call("DD5HT"), germany);
         assert_eq!(match_call("DR5DT"), germany);
+        assert_eq!(match_call("CAKE"),  None);
         //assert!(!match_call("DD1"));
     }
 }

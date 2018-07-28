@@ -1,3 +1,4 @@
+#![feature(rust_2018_preview)]
 #![feature(vec_remove_item)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
