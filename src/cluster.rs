@@ -22,7 +22,7 @@ impl Cluster {
     }
     ///Loads the configuration file into a Cluster struct
     pub fn load_config() -> Option<Cluster> {
-        let config_location = ::get_config_path();
+        let config_location = crate::get_config_path();
         let mut config: String = String::from("");
 
         let file = BufReader::new(File::open(config_location).expect("ERROR reading file"));
@@ -44,7 +44,7 @@ impl Cluster {
             Ok(serial_cluster) => serial_cluster,
             Err(err) => return Err(err.to_string()),
         };
-        let mut file = match File::create(::get_config_path()) {
+        let mut file = match File::create(crate::get_config_path()) {
             Ok(file) => file,
             Err(err) => return Err(err.to_string()),
         };
@@ -65,13 +65,13 @@ pub fn connect(cluster: Cluster) {
     let _ = stream.write(&corrected_call.as_bytes());
 
     let mut reader = BufReader::new(stream);
-    let callsigns = ::open_callsignlist(::get_call_path());
+    let callsigns = crate::open_callsignlist(crate::get_call_path());
     println!("Connection: Success");
     loop {
         let mut buffer = String::new(); // Create a new Buffer
         reader.read_line(&mut buffer).unwrap(); //Fill up the Buffer
                                                 //println!("{:?}", filter_entry(buffer));
-        if let Some(i) = ::get_callsign(&filter_entry(&buffer), &callsigns) {
+        if let Some(i) = crate::get_callsign(&filter_entry(&buffer), &callsigns) {
             println!("{}", i);
         };
     }

@@ -1,5 +1,5 @@
 [package]
-name = "dx-analyser"
+name = "dxtracker"
 version = "0.1.2"
 authors = ["hendrik@dd5ht.de"]
 autobins = false
@@ -7,6 +7,7 @@ autobins = false
 [dependencies]
 clap = "*"
 toml = "*"
+csv = "*"
 serde = "*"
 serde_derive = "*"
 dirs = "*"
@@ -14,11 +15,3 @@ regex = "*"
 
 [profile.release]
 lto = false
-
-[lib]
-name = "dxtracker"
-path = "src/lib.rs"
-
-[[bin]]
-name = "dxtool"
-path = "src/bin.rs"

@@ -1,3 +1,4 @@
+#![feature(rust_2018_preview)]
 #![feature(vec_remove_item)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -5,6 +6,7 @@
 extern crate regex;
 extern crate dirs;
 extern crate toml;
+extern crate csv;
 #[macro_use]
 extern crate serde_derive;
 
