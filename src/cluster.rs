@@ -86,8 +86,7 @@ fn filter_entry(entry: &str) -> Vec<String> {
             "de" => false,
             "DX" => false,
             _ => true,
-        })
-        .filter(|t| !t.is_empty())
+        }).filter(|t| !t.is_empty())
         .for_each(|x| output.push(String::from(x)));
     output
 }

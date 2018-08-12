@@ -3,10 +3,10 @@
 #![deny(unsafe_code)]
 #![deny(warnings)]
 
-extern crate regex;
-extern crate dirs;
-extern crate toml;
 extern crate csv;
+extern crate dirs;
+extern crate regex;
+extern crate toml;
 #[macro_use]
 extern crate serde_derive;
 
@@ -21,7 +21,6 @@ pub mod cluster;
 pub mod dxcc_filter;
 
 mod call_filter;
-
 
 ///Takes a formated dxcluster str vector and the list of all callsigns
 ///looks if callsign from spotted cluster is in list

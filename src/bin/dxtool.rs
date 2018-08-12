@@ -4,8 +4,8 @@ extern crate clap;
 extern crate dxtracker;
 
 use clap::{App, Arg};
-use dxtracker::*;
 use dxtracker::cluster::*;
+use dxtracker::*;
 
 fn main() {
     let matches = App::new("DX Tool")
@@ -17,51 +17,45 @@ fn main() {
                 .short("s")
                 .long("start")
                 .help("Starts the DXTOOL"),
-        )
-        .arg(
+        ).arg(
             Arg::with_name("LIST")
                 .short("l")
                 .long("list")
                 .help("Shows you all callsigns contained in the list"),
-        )
-        .arg(
+        ).arg(
             Arg::with_name("config")
                 .short("c")
                 .long("config")
                 .value_name("FILE")
                 .help("Sets a custom config file")
                 .takes_value(true),
-        )
-        .arg(
+        ).arg(
             Arg::with_name("ADD")
                 .short("a")
                 .long("add")
                 .value_name("CALL")
                 .help("Adds a new callsign to the list")
                 .takes_value(true),
-        )
-        .arg(
+        ).arg(
             Arg::with_name("REMOVE")
                 .short("r")
                 .long("remove")
                 .value_name("CALL")
                 .help("Removes a callsign from the list")
                 .takes_value(true),
-        )
-        .arg(
+        ).arg(
             Arg::with_name("INIT")
                 .short("i")
                 .long("init")
-                .help("Init the program //Temporary solution")
-        )
-        .get_matches();
+                .help("Init the program //Temporary solution"),
+        ).get_matches();
 
     if matches.is_present("LIST") {
         println!("Following callsigns are in the list: ");
         open_callsignlist(get_call_path())
             .into_iter()
             .skip(1)
-            .for_each(|x| println!("{}",x));
+            .for_each(|x| println!("{}", x));
     }
 
     if matches.is_present("START") {
@@ -88,11 +82,11 @@ fn main() {
             Err(e) => println!("{}", e),
         }
     };
-    
+
     if matches.is_present("INIT") {
         init();
     };
-    
+
     // TODO: ADD INIT for first bootup?
     //Set default server and callsign
     // Create Folder, Create Callsign list, Create default config?
@@ -107,8 +101,8 @@ fn init() {
         Err(err) => println!("Failed to create dir: {}", err),
     }
 
-    match dxtracker::cluster::Cluster::new(servername, callsign).init_config(){
-        Ok(_)  => println!("Init Sucessful"),
-        Err(err) => println!("Error: {}",err ),
+    match dxtracker::cluster::Cluster::new(servername, callsign).init_config() {
+        Ok(_) => println!("Init Sucessful"),
+        Err(err) => println!("Error: {}", err),
     };
 }
