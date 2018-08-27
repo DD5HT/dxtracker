@@ -97,7 +97,7 @@ fn init() {
     let servername = "cluster.dl9gtb.de:8000";
     let callsign = "DD5HT";
     match dxtracker::dir_build() {
-        Ok(_) => println!("Succesfuly created the directory!"),
+        Ok(_) => println!("Successfully created the directory!"),
         Err(err) => println!("Failed to create dir: {}", err),
     }
 
