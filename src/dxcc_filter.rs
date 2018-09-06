@@ -57,9 +57,9 @@ pub fn prefix_to_regex(prefix: &str) -> Option<Regex> {
     if prefix.len() == 5 {
         let prefix_regex = format!(
             r"^({}[{}-{}])",
-            prefix.get(0..1).unwrap(),
-            prefix.get(1..2).unwrap(),
-            prefix.get(4..5).unwrap(),
+            prefix.get(0..1).unwrap(), //unwrarp is safe here
+            prefix.get(1..2).unwrap(), //since we check the length
+            prefix.get(4..5).unwrap(), //before slicing the string
         );
         match Regex::new(prefix_regex.as_ref()) {
             Ok(fix) => Some(fix),

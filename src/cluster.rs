@@ -23,7 +23,7 @@ impl Cluster {
     ///Loads the configuration file into a Cluster struct
     pub fn load_config() -> Option<Cluster> {
         let config_location = crate::get_config_path();
-        let mut config: String = String::from("");
+        let mut config = String::from("");
 
         let file = BufReader::new(File::open(config_location).expect("ERROR reading file"));
         for line in file.lines() {
