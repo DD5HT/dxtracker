@@ -1,3 +1,5 @@
+//! update tests to use a tempdir so it will not conflict with user dir
+//! add tempdir as dev dependency
 extern crate dxtracker;
 
 #[test]
