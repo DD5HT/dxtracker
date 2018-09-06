@@ -1,5 +1,5 @@
 //!Contains the Cluster Client to connect to a given DX-Cluster server.
-//!Provids functions to read and write config files for the connection.
+//!Provides functions to read and write config files for the connection.
 use std::fs::File;
 use std::io::prelude::{BufRead, Write};
 use std::io::BufReader;
@@ -37,7 +37,7 @@ impl Cluster {
             Err(_) => None,
         }
     }
-    ///Inititalizes the config
+    ///Initializes the config
     ///returns amount of written bytes
     pub fn init_config(&self) -> Result<usize, String> {
         let serial_cluster = match toml::to_string_pretty(&self) {
@@ -78,7 +78,7 @@ pub fn connect(cluster: Cluster) {
 }
 ///Filters the cluster entries and returns a cleaned up vector of strings
 fn filter_entry(entry: &str) -> Vec<String> {
-    let mut output: Vec<String> = Vec::with_capacity(16); //Malfromated entries can lead to new memory allocation
+    let mut output: Vec<String> = Vec::with_capacity(16); //Malformated entries can lead to new memory allocation
     entry
         .trim_right_matches("\r\n")
         .split(' ')
