@@ -8,12 +8,8 @@ pool:
 
 steps:
 - script: curl https://sh.rustup.rs -sSf | sh -s -- -y
-- script: source $HOME/.cargo/env
+- script: export PATH="$PATH:$HOME/.cargo/bin"
       
-- script: cargo test
+- script: cargo test --verbose
 - script: cargo build --release 
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
