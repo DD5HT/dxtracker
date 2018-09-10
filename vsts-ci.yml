@@ -7,7 +7,10 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 steps:
-- script: curl https://sh.rustup.rs -sSf | sh -s -- -y
+- script: |
+      curl https://sh.rustup.rs -sSf | sh -s -- -y
+      source $HOME/.cargo/env
+      
 - script: cargo test
 - script: cargo build --release 
 
