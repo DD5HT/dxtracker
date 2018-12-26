@@ -34,11 +34,11 @@ mod call_filter;
 /// ```
 pub fn get_callsign<T: AsRef<str>>(entry: &[T], searchlist: &[String]) -> Option<String> {
     if entry.len() > 3 {
-        let spotter = entry[0].as_ref().trim_right_matches("-#:");
+        let spotter = entry[0].as_ref().trim_end_matches("-#:");
         let call = entry[2].as_ref();
         let freq = entry[1].as_ref();
         let mode = entry[3].as_ref();
-        match searchlist.into_iter().find(|&x| x == call) {
+        match searchlist.iter().find(|&x| x == call) {
             Some(c) => Some(format!(
                 "Spotted {} on {} by {} in {}",
                 c, freq, spotter, mode
@@ -56,9 +56,11 @@ pub fn open_callsignlist(list: PathBuf) -> Vec<String> {
     let mut calls: Vec<String> = Vec::new();
     for line in file.lines() {
         match line {
-            Ok(l) => if !l.is_empty() {
-                calls.push(l)
-            },
+            Ok(l) => {
+                if !l.is_empty() {
+                    calls.push(l)
+                }
+            }
             Err(e) => println!("Ups: {}", e),
         }
     }

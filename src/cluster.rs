@@ -80,13 +80,14 @@ pub fn connect(cluster: Cluster) {
 fn filter_entry(entry: &str) -> Vec<String> {
     let mut output: Vec<String> = Vec::with_capacity(16); //Malformated entries can lead to new memory allocation
     entry
-        .trim_right_matches("\r\n")
+        .trim_end_matches("\r\n")
         .split(' ')
         .filter(|&t| match t {
             "de" => false,
             "DX" => false,
             _ => true,
-        }).filter(|t| !t.is_empty())
+        })
+        .filter(|t| !t.is_empty())
         .for_each(|x| output.push(String::from(x)));
     output
 }
