@@ -1,14 +1,5 @@
-#![feature(rust_2018_preview)]
-#![feature(vec_remove_item)]
 #![deny(unsafe_code)]
 #![deny(warnings)]
-
-extern crate csv;
-extern crate dirs;
-extern crate regex;
-extern crate toml;
-#[macro_use]
-extern crate serde_derive;
 
 use std::fs::File;
 use std::fs::{DirBuilder, OpenOptions};
@@ -93,8 +84,8 @@ pub fn remove_call(call: &str) -> Result<String, String> {
     let newcall = call.to_string().to_uppercase();
 
     if list.contains(&newcall) {
-        let mut newlist = list.clone();
-        newlist.remove_item(&newcall).unwrap();
+        let newlist = list.clone();
+        let output = newlist.iter().filter(|&x| x == &newcall);
 
         let mut file = OpenOptions::new()
             .write(true)
@@ -102,8 +93,8 @@ pub fn remove_call(call: &str) -> Result<String, String> {
             .open(get_call_path())
             .expect("Can't open file");
 
-        for i in newlist {
-            let content = i + "\n";
+        for i in output {
+            let content = format!("{}\n", i);
             file.write_all(content.as_bytes()).unwrap();
         }
         return Ok(call.to_uppercase());

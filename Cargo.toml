@@ -2,13 +2,13 @@
 name = "dxtracker"
 version = "0.1.2"
 authors = ["hendrik@dd5ht.de"]
+edition = "2018"
 
 [dependencies]
 clap = "*"
 toml = "*"
 csv = "*"
-serde = "*"
-serde_derive = "*"
+serde = { version = "*", features = ["derive"] }
 dirs = "*"
 regex = "*"
 

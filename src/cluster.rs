@@ -1,5 +1,6 @@
 //!Contains the Cluster Client to connect to a given DX-Cluster server.
 //!Provides functions to read and write config files for the connection.
+use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::prelude::{BufRead, Write};
 use std::io::BufReader;
